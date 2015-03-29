@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">SwanExpressions</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="array_expressions">
+        <item>Sensor Expression</item>
+        <item>Constant Expression</item>
+        <item>Math Expression</item>
+        <item>Comparison Expression</item>
+        <item>Logic Expression</item>
+    </string-array>
+
+    <string-array name="value_paths_example">
+        <item>x</item>
+        <item>y</item>
+        <item>z</item>
+    </string-array>
+</resources>
