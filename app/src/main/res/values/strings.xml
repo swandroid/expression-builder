@@ -15,6 +15,11 @@
 
     <string name="label_sensor">SENSOR</string>
     <string name="label_value_path">VALUE PATH</string>
+    <string name="label_history">HISTORY</string>
+    <string name="label_history_window">WINDOW</string>
+    <string name="label_history_unit">UNIT</string>
+    <string name="label_history_reduction_mode">REDUCTION MODE</string>
+
 
     <string-array name="value_paths_example">
         <item>x</item>

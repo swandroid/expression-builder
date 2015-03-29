@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="time_units">
+        <item>milliseconds</item>
+        <item>seconds</item>
+        <item>minutes</item>
+        <item>hours</item>
+    </string-array>
+
+    <string-array name="time_units_values">
+        <item>ms</item>
+        <item>s</item>
+        <item>m</item>
+        <item>h</item>
+    </string-array>
+
+    <string-array name="history_reduction_modes">
+        <item>ANY</item>
+        <item>ALL</item>
+        <item>MAX</item>
+        <item>MIN</item>
+        <item>MEAN</item>
+        <item>MEDIAN</item>
+    </string-array>
+</resources>

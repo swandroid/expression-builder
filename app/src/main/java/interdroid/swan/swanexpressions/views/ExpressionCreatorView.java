@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -35,6 +36,11 @@ public class ExpressionCreatorView extends FrameLayout {
     private ArrayList<SensorInfo> mSensors;
     private Spinner mSensorSpinner;
     private Spinner mValuePathSpinner;
+
+
+    private EditText mHistoryWindow;
+    private Spinner mHistoryUnit;
+    private Spinner mHistoryReductionMode;
 
 
     public ExpressionCreatorView(Context context) {
@@ -85,6 +91,19 @@ public class ExpressionCreatorView extends FrameLayout {
 
         mValuePathSpinner = (Spinner) findViewById(R.id.sensor_expression_value_path_spinner);
 
+        mHistoryWindow = (EditText) findViewById(R.id.sensor_expression_history_window_edittext);
+        mHistoryUnit = (Spinner) findViewById(R.id.sensor_expression_history_unit_spinner);
+        mHistoryReductionMode = (Spinner) findViewById(R.id.sensor_expression_history_reduction_spinner);
+
+        ArrayAdapter<String> unitAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                getContext().getResources().getStringArray(R.array.time_units_values));
+        mHistoryUnit.setAdapter(unitAdapter);
+
+        ArrayAdapter<String> reductionModeAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                getContext().getResources().getStringArray(R.array.history_reduction_modes));
+        mHistoryReductionMode.setAdapter(reductionModeAdapter);
     }
 
     private AdapterView.OnItemSelectedListener mOnSensorSelectedListener = new AdapterView.OnItemSelectedListener() {
