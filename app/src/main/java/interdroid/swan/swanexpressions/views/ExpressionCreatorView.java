@@ -97,6 +97,8 @@ public class ExpressionCreatorView extends FrameLayout {
                                     android.R.layout.simple_spinner_dropdown_item, valuePaths);
                 mValuePathSpinner.setAdapter(adapter);
 
+                //sensorInfo.getIntent()
+
                /*for (int i = 0; i < valuePaths.size(); i++) {
                     Log.d(TAG, "ValuePath: " + i + " " + valuePaths.get(i));
                 }*/

@@ -1,29 +1,21 @@
 package interdroid.swan.swanexpressions;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Spinner;
+import android.widget.Toast;
 
-import interdroid.swan.ExpressionListener;
-import interdroid.swan.ExpressionManager;
-import interdroid.swan.SwanException;
-import interdroid.swan.TriStateExpressionListener;
-import interdroid.swan.ValueExpressionListener;
 import interdroid.swan.swanexpressions.activities.BaseActivity;
-import interdroid.swan.swanexpressions.adapters.SensorSelectSpinnerAdapter;
-import interdroid.swan.swansong.ExpressionFactory;
-import interdroid.swan.swansong.ExpressionParseException;
-import interdroid.swan.swansong.TimestampedValue;
-import interdroid.swan.swansong.TriState;
-import interdroid.swan.swansong.TriStateExpression;
-import interdroid.swan.swansong.ValueExpression;
 
 
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final int EXPRESSION_BUILDER_REQUEST = 1234;
 
     private Spinner mSensorSpinner;
 
@@ -33,8 +25,35 @@ public class MainActivity extends BaseActivity {
         setActionBarIcon(R.drawable.ic_ab_drawer);
 
         getViews();
+        //To start the expression builder from swan
+        //startExpressionBuilder();
 
         //Log.d(TAG, "size: " + ExpressionManager.getSensors(MainActivity.this).size());
+    }
+
+    private void startExpressionBuilder() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction("interdroid.swan.ui.BUILD_EXPRESSION");
+
+        // Verify that the intent will resolve to an activity
+        if (sendIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(sendIntent, EXPRESSION_BUILDER_REQUEST);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == EXPRESSION_BUILDER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                String expression = data.getStringExtra("Expression");
+                Toast.makeText(getApplicationContext(), expression, Toast.LENGTH_LONG).show();
+                Log.d(TAG, "expression result: " + expression);
+                // The user picked a contact.
+                // The Intent's data Uri identifies which contact was selected.
+
+                // Do something with the contact here (bigger example below)
+            }
+        }
     }
 
     @Override
@@ -76,8 +95,12 @@ public class MainActivity extends BaseActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_expression_builder:
+                startExpressionBuilder();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
