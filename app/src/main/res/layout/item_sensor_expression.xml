@@ -12,6 +12,12 @@
     <Spinner
         android:id="@+id/sensor_expression_sensor_spinner"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_half_vertical_margin"/>
+
+    <Spinner
+        android:id="@+id/sensor_expression_value_path_spinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>

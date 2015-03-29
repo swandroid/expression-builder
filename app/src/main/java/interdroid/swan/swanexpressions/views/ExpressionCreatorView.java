@@ -7,9 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import interdroid.swan.ExpressionManager;
 import interdroid.swan.SensorInfo;
@@ -30,6 +34,7 @@ public class ExpressionCreatorView extends FrameLayout {
     //TODO: move to custom view or something
     private ArrayList<SensorInfo> mSensors;
     private Spinner mSensorSpinner;
+    private Spinner mValuePathSpinner;
 
 
     public ExpressionCreatorView(Context context) {
@@ -72,16 +77,30 @@ public class ExpressionCreatorView extends FrameLayout {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.item_sensor_expression, null);
         mLinearLayout.addView(viewGroup);
         mSensorSpinner = (Spinner) findViewById(R.id.sensor_expression_sensor_spinner);
+        mSensors = (ArrayList) ExpressionManager.getSensors(getContext());
         SensorSelectSpinnerAdapter adapter = new SensorSelectSpinnerAdapter(getContext(),
-                R.layout.spinner_row, ExpressionManager.getSensors(getContext()));
+                R.layout.spinner_row, mSensors);
         mSensorSpinner.setAdapter(adapter);
         mSensorSpinner.setOnItemSelectedListener(mOnSensorSelectedListener);
+
+        mValuePathSpinner = (Spinner) findViewById(R.id.sensor_expression_value_path_spinner);
+
     }
 
     private AdapterView.OnItemSelectedListener mOnSensorSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (mSensors != null) {
+                SensorInfo sensorInfo = mSensors.get(position);
+                ArrayList<String> valuePaths = sensorInfo.getValuePaths();
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                                    android.R.layout.simple_spinner_dropdown_item, valuePaths);
+                mValuePathSpinner.setAdapter(adapter);
 
+               /*for (int i = 0; i < valuePaths.size(); i++) {
+                    Log.d(TAG, "ValuePath: " + i + " " + valuePaths.get(i));
+                }*/
+            }
         }
 
         @Override
