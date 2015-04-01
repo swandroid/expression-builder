@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="array_expressions">
+        <item>Sensor Expression</item>
+        <item>Constant Expression</item>
+        <item>Math Expression</item>
+        <item>Comparison Expression</item>
+        <item>Logic Expression</item>
+    </string-array>
+
     <string-array name="time_units">
         <item>milliseconds</item>
         <item>seconds</item>

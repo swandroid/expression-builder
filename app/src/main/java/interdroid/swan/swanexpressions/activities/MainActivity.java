@@ -1,14 +1,21 @@
-package interdroid.swan.swanexpressions;
+package interdroid.swan.swanexpressions.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import interdroid.swan.swanexpressions.activities.BaseActivity;
+import com.melnykov.fab.FloatingActionButton;
+
+import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.adapters.ExpressionListAdapter;
+import interdroid.swan.swanexpressions.pojos.ExpressionItem;
 
 
 public class MainActivity extends BaseActivity {
@@ -16,6 +23,12 @@ public class MainActivity extends BaseActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int EXPRESSION_BUILDER_REQUEST = 1234;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ExpressionListAdapter mAdapter;
+
+    private FloatingActionButton mAddButton;
 
     private Spinner mSensorSpinner;
 
@@ -62,6 +75,18 @@ public class MainActivity extends BaseActivity {
     }
 
     private void getViews() {
+        mRecyclerView = (RecyclerView) findViewById(R.id.main_activity_recyclerview);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new ExpressionListAdapter(mOnExpressionCLickListener);
+        mRecyclerView.setAdapter(mAdapter);
+
+        mAddButton = (FloatingActionButton) findViewById(R.id.fab);
+        mAddButton.setOnClickListener(mOnAddClickListener);
+
+
         /*mSensorSpinner = (Spinner) findViewById(R.id.main_sensor_spinner);
         SensorSelectSpinnerAdapter adapter = new SensorSelectSpinnerAdapter(this,
                 R.layout.spinner_row, ExpressionManager.getSensors(MainActivity.this));
@@ -79,6 +104,22 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }*/
     }
+
+    private ExpressionListAdapter.OnExpressionClickListener mOnExpressionCLickListener = new ExpressionListAdapter.OnExpressionClickListener() {
+
+        @Override
+        public void onExpressionClicked(ExpressionItem expression) {
+
+        }
+    };
+
+    private View.OnClickListener mOnAddClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(MainActivity.this, BuilderActivity.class);
+            startActivity(intent); //TODO: probably make startActivityForResult()
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
