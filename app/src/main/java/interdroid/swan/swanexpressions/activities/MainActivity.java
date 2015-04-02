@@ -118,6 +118,7 @@ public class MainActivity extends BaseActivity {
         public void onClick(View v) {
             Intent intent = new Intent(MainActivity.this, BuilderActivity.class);
             startActivity(intent); //TODO: probably make startActivityForResult()
+            overridePendingTransition(R.anim.right_slide_in, R.anim.fade_out);
         }
     };
 
@@ -145,5 +146,10 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

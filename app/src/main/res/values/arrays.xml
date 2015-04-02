@@ -30,4 +30,22 @@
         <item>MEAN</item>
         <item>MEDIAN</item>
     </string-array>
+
+    <string-array name="math_operators">
+        <item>+</item>
+        <item>-</item>
+        <item>*</item>
+        <item>/</item>
+        <item>%</item>
+    </string-array>
+
+    <string-array name="logic_operators">
+        <item>AND</item>
+        <item>OR</item>
+    </string-array>
+
+    <string-array name="logic_operators_values">
+        <item></item>
+        <item>||</item>
+    </string-array>
 </resources>

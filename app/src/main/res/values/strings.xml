@@ -19,4 +19,6 @@
     <string name="label_history_window">WINDOW</string>
     <string name="label_history_unit">UNIT</string>
     <string name="label_history_reduction_mode">REDUCTION MODE</string>
+
+    <string name="label_math_operator">MATH OPERATOR</string>
 </resources>
