@@ -31,6 +31,11 @@
         <item>MEDIAN</item>
     </string-array>
 
+    <string-array name="constant_types">
+        <item>NUMBER</item>
+        <item>TEXT</item>
+    </string-array>
+
     <string-array name="math_operators">
         <item>+</item>
         <item>-</item>
@@ -39,13 +44,26 @@
         <item>%</item>
     </string-array>
 
+    <string-array name="comparison_operators">
+        <item>==</item>
+        <item>&gt;=</item>
+        <item>&lt;=</item>
+        <item>&gt;</item>
+        <item>&lt;</item>
+        <item>!=</item>
+        <item>regex</item>
+        <item>startsWith</item>
+        <item>endsWith</item>
+        <item>contains</item>
+    </string-array>
+
     <string-array name="logic_operators">
         <item>AND</item>
         <item>OR</item>
     </string-array>
 
     <string-array name="logic_operators_values">
-        <item></item>
+        <item>&amp;&amp;</item>
         <item>||</item>
     </string-array>
 </resources>

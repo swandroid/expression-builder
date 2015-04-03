@@ -20,5 +20,8 @@
     <string name="label_history_unit">UNIT</string>
     <string name="label_history_reduction_mode">REDUCTION MODE</string>
 
+    <string name="label_constant">CONSTANT</string>
     <string name="label_math_operator">MATH OPERATOR</string>
+    <string name="label_comparison_operator">COMPARISON OPERATOR</string>
+    <string name="label_logic_operator">LOGIC OPERATOR</string>
 </resources>

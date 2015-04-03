@@ -20,6 +20,8 @@ import interdroid.swan.SensorInfo;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.adapters.SensorSelectSpinnerAdapter;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
+import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
 
 /**
  * Created by steven on 25/03/15.
@@ -36,7 +38,7 @@ public class ExpressionCreatorView extends FrameLayout {
 
     //TODO: maybe move to custom view or something
     //SENSOR EXPRESSION
-    private ArrayList<SensorInfo> mSensors;
+    private static ArrayList<SensorInfo> mSensors;
     private Spinner mSensorSpinner;
     private Spinner mValuePathSpinner;
     private EditText mHistoryWindow;
@@ -44,19 +46,17 @@ public class ExpressionCreatorView extends FrameLayout {
     private Spinner mHistoryReductionMode;
 
     //CONSTANT EXPRESSION
+    private EditText mConstantValue;
+    private Spinner mConstantSpinner;
 
     //MATH EXPRESSION
     private Spinner mMathSpinner;
-    private ArrayAdapter<String> mMathAdapter;
 
     //COMPARISON EXPRESSION
     private Spinner mComparisonSpinner;
-    private ArrayAdapter<String> mComparisonAdapter;
-    private EditText mComparisonEditText;
 
     //LOGIC EXPRESSION
     private Spinner mLogicSpinner;
-    private ArrayAdapter<String> mLogicAdapter;
 
     public ExpressionCreatorView(Context context) {
         super(context);
@@ -177,7 +177,18 @@ public class ExpressionCreatorView extends FrameLayout {
     };
 
     private void inflateConstantExpression() {
+        LayoutInflater inflater = LayoutInflater
+                .from(getContext());
+        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.item_constant_expression, null);
+        mLinearLayout.addView(viewGroup);
 
+        mConstantValue = (EditText) findViewById(R.id.constant_expression_value_edittext);
+        /*mConstantSpinner = (Spinner) findViewById(R.id.constant_expression_constant_spinner);
+
+        ArrayAdapter<String> constantAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                getContext().getResources().getStringArray(R.array.constant_types));
+        mConstantSpinner.setAdapter(constantAdapter);*/
     }
 
     private void inflateMathExpression() {
@@ -188,19 +199,74 @@ public class ExpressionCreatorView extends FrameLayout {
 
         mMathSpinner = (Spinner) findViewById(R.id.math_expression_math_spinner);
 
-        mMathAdapter = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> mathAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 getContext().getResources().getStringArray(R.array.math_operators));
-        mMathSpinner.setAdapter(mMathAdapter);
+        mMathSpinner.setAdapter(mathAdapter);
     }
 
     private void inflateComparisonExpression() {
+        LayoutInflater inflater = LayoutInflater
+                .from(getContext());
+        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.item_comparison_expression, null);
+        mLinearLayout.addView(viewGroup);
 
+        mComparisonSpinner = (Spinner) findViewById(R.id.comparison_expression_comparison_spinner);
+
+        ArrayAdapter<String> logicAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                getContext().getResources().getStringArray(R.array.comparison_operators));
+        mComparisonSpinner.setAdapter(logicAdapter);
     }
 
     private void inflateLogicExpression() {
+        LayoutInflater inflater = LayoutInflater
+                .from(getContext());
+        ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.item_logic_expression, null);
+        mLinearLayout.addView(viewGroup);
+
+        mLogicSpinner = (Spinner) findViewById(R.id.logic_expression_logic_spinner);
+
+        ArrayAdapter<String> logicAdapter = new ArrayAdapter<String>(getContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                getContext().getResources().getStringArray(R.array.logic_operators));
+        mLogicSpinner.setAdapter(logicAdapter);
+    }
+
+    public void setExpressionCreatorItem(ExpressionCreatorItem expressionCreatorItem) {
 
     }
 
+    public ExpressionCreatorItem getExpressionCreatorItem() {
+        ExpressionType expressionType = (ExpressionType) mSpinner.getSelectedItem();
+        int expressionTypeId = expressionType.getId();
+        removeCurrentExpression();
+        if (expressionTypeId == ExpressionType.SENSOR_EXPRESSION.getId()) {
+            return getSensorExpression();
+        } else if (expressionTypeId == ExpressionType.CONSTANT_EXPRESSION.getId()) {
+            //return getConstantExpression();
+        } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
+            //return getMathExpression();
+        } else if (expressionTypeId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
+            //return getComparisonExpression();
+        } else if (expressionTypeId == ExpressionType.LOGIC_EXPRESSION.getId()) {
+            //return getLogicExpression();
+        }
+        return null;
+    }
 
+    private SensorExpression getSensorExpression() {
+        SensorExpression sensorExpression = new SensorExpression();
+        SensorInfo sensorInfo = (SensorInfo) mSensorSpinner.getSelectedItem();
+        sensorExpression.setSensor(sensorInfo.getEntity());
+
+        sensorExpression.setValuePath(mValuePathSpinner.getSelectedItem().toString());
+
+        sensorExpression.setHistoryWindowAndUnit(Integer.parseInt(mHistoryWindow.getText().toString()),
+                mHistoryUnit.getSelectedItem().toString());
+
+        sensorExpression.setHistoryReductionMode(mHistoryReductionMode.getSelectedItem().toString());
+
+        return sensorExpression;
+    }
 }
