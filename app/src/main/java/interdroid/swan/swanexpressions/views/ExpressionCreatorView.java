@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import interdroid.swan.ExpressionManager;
 import interdroid.swan.SensorInfo;
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.SwanExpressionsApp;
 import interdroid.swan.swanexpressions.adapters.SensorSelectSpinnerAdapter;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
+import interdroid.swan.swanexpressions.pojos.expressions.ConstantExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
 
@@ -57,6 +59,8 @@ public class ExpressionCreatorView extends FrameLayout {
 
     //LOGIC EXPRESSION
     private Spinner mLogicSpinner;
+
+    private ExpressionCreatorItem mExpressionCreatorItem;
 
     public ExpressionCreatorView(Context context) {
         super(context);
@@ -98,9 +102,12 @@ public class ExpressionCreatorView extends FrameLayout {
             ExpressionType expressionType = mExpressionTypeAdapter.getItem(position);
             int expressionTypeId = expressionType.getId();
             removeCurrentExpression();
+            mExpressionCreatorItem.expressionType = expressionType;
             if (expressionTypeId == ExpressionType.SENSOR_EXPRESSION.getId()) {
                 inflateSensorExpression();
             } else if (expressionTypeId == ExpressionType.CONSTANT_EXPRESSION.getId()) {
+                mExpressionCreatorItem.expressionInterface = null;
+                mExpressionCreatorItem.expressionInterface = new ConstantExpression();
                 inflateConstantExpression();
             } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
                 inflateMathExpression();
@@ -129,7 +136,9 @@ public class ExpressionCreatorView extends FrameLayout {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.item_sensor_expression, null);
         mLinearLayout.addView(viewGroup);
         mSensorSpinner = (Spinner) findViewById(R.id.sensor_expression_sensor_spinner);
+        //TODO: try to make faster or save somewhere. In Application class doesn't looks to work
         mSensors = (ArrayList) ExpressionManager.getSensors(getContext());
+
         SensorSelectSpinnerAdapter adapter = new SensorSelectSpinnerAdapter(getContext(),
                 R.layout.spinner_row, mSensors);
         mSensorSpinner.setAdapter(adapter);
@@ -157,10 +166,14 @@ public class ExpressionCreatorView extends FrameLayout {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (mSensors != null) {
                 SensorInfo sensorInfo = mSensors.get(position);
+                mExpressionCreatorItem.expressionInterface = null;
+                mExpressionCreatorItem.expressionInterface = new SensorExpression();
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setSensor(sensorInfo.getEntity());
                 ArrayList<String> valuePaths = sensorInfo.getValuePaths();
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
                                     android.R.layout.simple_spinner_dropdown_item, valuePaths);
                 mValuePathSpinner.setAdapter(adapter);
+                mValuePathSpinner.setOnItemSelectedListener(mOnValuePathSelectedListener);
 
                 //sensorInfo.getIntent()
 
@@ -168,6 +181,18 @@ public class ExpressionCreatorView extends FrameLayout {
                     Log.d(TAG, "ValuePath: " + i + " " + valuePaths.get(i));
                 }*/
             }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    private AdapterView.OnItemSelectedListener mOnValuePathSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            ((SensorExpression)mExpressionCreatorItem.expressionInterface).setValuePath(mValuePathSpinner.getSelectedItem().toString());
         }
 
         @Override
@@ -234,15 +259,16 @@ public class ExpressionCreatorView extends FrameLayout {
     }
 
     public void setExpressionCreatorItem(ExpressionCreatorItem expressionCreatorItem) {
-
+        mExpressionCreatorItem = expressionCreatorItem;
+        //TODO: set items according to this;
     }
 
-    public ExpressionCreatorItem getExpressionCreatorItem() {
+   /* public ExpressionCreatorItem getExpressionCreatorItem() {
         ExpressionType expressionType = (ExpressionType) mSpinner.getSelectedItem();
         int expressionTypeId = expressionType.getId();
         removeCurrentExpression();
         if (expressionTypeId == ExpressionType.SENSOR_EXPRESSION.getId()) {
-            return getSensorExpression();
+            return updateSensorExpression();
         } else if (expressionTypeId == ExpressionType.CONSTANT_EXPRESSION.getId()) {
             //return getConstantExpression();
         } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
@@ -255,8 +281,9 @@ public class ExpressionCreatorView extends FrameLayout {
         return null;
     }
 
-    private SensorExpression getSensorExpression() {
-        SensorExpression sensorExpression = new SensorExpression();
+
+
+    private SensorExpression updateSensorExpression() {
         SensorInfo sensorInfo = (SensorInfo) mSensorSpinner.getSelectedItem();
         sensorExpression.setSensor(sensorInfo.getEntity());
 
@@ -268,5 +295,5 @@ public class ExpressionCreatorView extends FrameLayout {
         sensorExpression.setHistoryReductionMode(mHistoryReductionMode.getSelectedItem().toString());
 
         return sensorExpression;
-    }
+    }*/
 }

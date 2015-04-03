@@ -4,6 +4,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_expression_builder">Start Expression Builder</string>
+    <string name="action_save">Save</string>
 
     <string name="expression_sensor">Sensor Expression</string>
     <string name="expression_constant">Constant Expression</string>

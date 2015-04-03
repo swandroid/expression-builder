@@ -5,17 +5,13 @@ import interdroid.swan.swanexpressions.enums.ExpressionType;
 /**
  * Created by steven on 01/04/15.
  */
-public class SensorExpression extends ExpressionCreatorItem{
+public class SensorExpression implements ExpressionInterface{
 
     private String sensor;
     private String valuePath;
     private int historyWindow;
     private String historyUnit;
     private String historyReductionMode;
-
-    public SensorExpression() {
-        super(ExpressionType.SENSOR_EXPRESSION);
-    }
 
     @Override
     public String getExpression() {

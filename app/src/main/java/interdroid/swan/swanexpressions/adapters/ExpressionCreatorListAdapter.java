@@ -8,7 +8,9 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.pojos.expressions.ConstantExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
 import interdroid.swan.swanexpressions.views.ExpressionCreatorView;
 
 /**
@@ -55,6 +57,7 @@ public class ExpressionCreatorListAdapter extends RecyclerView.Adapter<Expressio
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         ExpressionCreatorItem expression = mExpressionCreators.get(i);
+        viewHolder.mCreatorView.setExpressionCreatorItem(expression);
         viewHolder.mPosition = i;
     }
 
@@ -82,4 +85,17 @@ public class ExpressionCreatorListAdapter extends RecyclerView.Adapter<Expressio
             }
         }
     };
+
+    public String buildExpression() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < mExpressionCreators.size(); i++) {
+            ExpressionCreatorItem expressionCreatorItem = mExpressionCreators.get(i);
+            sb.append(expressionCreatorItem.expressionInterface.getExpression());
+            sb.append(" ");
+        }
+        if (mExpressionCreators.size() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
 }

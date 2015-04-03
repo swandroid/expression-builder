@@ -3,7 +3,10 @@ package interdroid.swan.swanexpressions.activities;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -54,4 +57,26 @@ public class BuilderActivity extends BaseActivity {
             mAdapter.addExpressionCreator();
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_builder, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                buildExpression();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void buildExpression() {
+        String expression = mAdapter.buildExpression();
+        Toast.makeText(getApplicationContext(), "Expression: " + expression, Toast.LENGTH_LONG).show();
+    }
 }
