@@ -1,8 +1,9 @@
 package interdroid.swan.swanexpressions.views;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +19,13 @@ import java.util.ArrayList;
 import interdroid.swan.ExpressionManager;
 import interdroid.swan.SensorInfo;
 import interdroid.swan.swanexpressions.R;
-import interdroid.swan.swanexpressions.SwanExpressionsApp;
 import interdroid.swan.swanexpressions.adapters.SensorSelectSpinnerAdapter;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
+import interdroid.swan.swanexpressions.pojos.expressions.ComparisonExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ConstantExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.expressions.LogicExpression;
+import interdroid.swan.swanexpressions.pojos.expressions.MathExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
 
 /**
@@ -88,34 +91,50 @@ public class ExpressionCreatorView extends FrameLayout {
         mRoot = (ViewGroup) inflater.inflate(R.layout.view_expression_creator, this, true);
         mLinearLayout = (LinearLayout) mRoot.findViewById(R.id.expression_create_linearlayout);
         mSpinner = (Spinner) mRoot.findViewById(R.id.expression_create_spinner);
+    }
+
+    public void setExpressionCreatorItem(ExpressionCreatorItem expressionCreatorItem) {
+        mExpressionCreatorItem = expressionCreatorItem;
+
+        ExpressionType[] expressionTypes = getPossibleExpressionTypes();
         mExpressionTypeAdapter = new ArrayAdapter<ExpressionType>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item, ExpressionType.getExpressionTypes());
+                android.R.layout.simple_spinner_dropdown_item, expressionTypes);
         mSpinner.setAdapter(mExpressionTypeAdapter);
         mSpinner.setOnItemSelectedListener(mOnExpressionTypeSelectedListener);
 
-        inflateSensorExpression();
+        mSpinner.setSelection(getSelectionToSet(expressionTypes, expressionCreatorItem.expressionType));
+        //inflateCorrectExpression(expressionCreatorItem.expressionType);
+        //TODO: set items according to this;
+    }
+
+    private ExpressionType[] getPossibleExpressionTypes() {
+        int expressionTypeId = mExpressionCreatorItem.possibleExpressionType.getId();
+        if (expressionTypeId == ExpressionType.VALUE_EXPRESSION.getId()) {
+            return ExpressionType.getValueExpressionTypes();
+        } else if (expressionTypeId == ExpressionType.VALUE_OPERATOR_EXPRESSION.getId()) {
+            return ExpressionType.getValueOperatorExpressionTypes();
+        } else if (expressionTypeId == ExpressionType.TRI_MATH_OPERATOR_EXPRESSION.getId()) {
+            return ExpressionType.getTriMathExpressionTypes();
+        } else {
+            return ExpressionType.getExpressionTypes();
+        }
+    }
+
+    private int getSelectionToSet(ExpressionType[] expressionTypes, ExpressionType expressionType) {
+        int expressionId = expressionType.getId();
+        for (int i = 0; i < expressionTypes.length; i++) {
+            if (expressionTypes[i].getId() == expressionId) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private AdapterView.OnItemSelectedListener mOnExpressionTypeSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             ExpressionType expressionType = mExpressionTypeAdapter.getItem(position);
-            int expressionTypeId = expressionType.getId();
-            removeCurrentExpression();
-            mExpressionCreatorItem.expressionType = expressionType;
-            if (expressionTypeId == ExpressionType.SENSOR_EXPRESSION.getId()) {
-                inflateSensorExpression();
-            } else if (expressionTypeId == ExpressionType.CONSTANT_EXPRESSION.getId()) {
-                mExpressionCreatorItem.expressionInterface = null;
-                mExpressionCreatorItem.expressionInterface = new ConstantExpression();
-                inflateConstantExpression();
-            } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
-                inflateMathExpression();
-            } else if (expressionTypeId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
-                inflateComparisonExpression();
-            } else if (expressionTypeId == ExpressionType.LOGIC_EXPRESSION.getId()) {
-                inflateLogicExpression();
-            }
+            inflateCorrectExpression(expressionType);
         }
 
         @Override
@@ -123,6 +142,28 @@ public class ExpressionCreatorView extends FrameLayout {
 
         }
     };
+
+    private void inflateCorrectExpression(ExpressionType expressionType) {
+        int expressionTypeId = expressionType.getId();
+        removeCurrentExpression();
+        mExpressionCreatorItem.expressionType = expressionType;
+        mExpressionCreatorItem.expressionInterface = null;
+        if (expressionTypeId == ExpressionType.SENSOR_EXPRESSION.getId()) {
+            inflateSensorExpression();
+        } else if (expressionTypeId == ExpressionType.CONSTANT_EXPRESSION.getId()) {
+            mExpressionCreatorItem.expressionInterface = new ConstantExpression();
+            inflateConstantExpression();
+        } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
+            mExpressionCreatorItem.expressionInterface = new MathExpression();
+            inflateMathExpression();
+        } else if (expressionTypeId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
+            mExpressionCreatorItem.expressionInterface = new ComparisonExpression();
+            inflateComparisonExpression();
+        } else if (expressionTypeId == ExpressionType.LOGIC_EXPRESSION.getId()) {
+            mExpressionCreatorItem.expressionInterface = new LogicExpression();
+            inflateLogicExpression();
+        }
+    }
 
     private void removeCurrentExpression() {
         if (mLinearLayout.getChildCount() > 2) {
@@ -145,10 +186,16 @@ public class ExpressionCreatorView extends FrameLayout {
         mSensorSpinner.setOnItemSelectedListener(mOnSensorSelectedListener);
 
         mValuePathSpinner = (Spinner) findViewById(R.id.sensor_expression_value_path_spinner);
+        mValuePathSpinner.setOnItemSelectedListener(mOnValuePathSelectedListener);
 
         mHistoryWindow = (EditText) findViewById(R.id.sensor_expression_history_window_edittext);
+        mHistoryWindow.addTextChangedListener(mOnHistoryWindowChangeListener);
+
         mHistoryUnit = (Spinner) findViewById(R.id.sensor_expression_history_unit_spinner);
+        mHistoryUnit.setOnItemSelectedListener(mOnHistoryUnitChangeListener);
+
         mHistoryReductionMode = (Spinner) findViewById(R.id.sensor_expression_history_reduction_spinner);
+        mHistoryReductionMode.setOnItemSelectedListener(mOnHistoryReductionModeChangeListener);
 
         ArrayAdapter<String> unitAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
@@ -173,7 +220,6 @@ public class ExpressionCreatorView extends FrameLayout {
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
                                     android.R.layout.simple_spinner_dropdown_item, valuePaths);
                 mValuePathSpinner.setAdapter(adapter);
-                mValuePathSpinner.setOnItemSelectedListener(mOnValuePathSelectedListener);
 
                 //sensorInfo.getIntent()
 
@@ -201,6 +247,62 @@ public class ExpressionCreatorView extends FrameLayout {
         }
     };
 
+    private TextWatcher mOnHistoryWindowChangeListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.length() < 1) {
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(0, "");
+            } else {
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
+                        Integer.parseInt(s.toString()),
+                        mHistoryUnit.getSelectedItem().toString());
+            }
+        }
+    };
+
+    private AdapterView.OnItemSelectedListener mOnHistoryReductionModeChangeListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String window = mHistoryWindow.getText().toString();
+            if (window.length() > 0) {
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
+                        Integer.parseInt(window),
+                        mHistoryUnit.getSelectedItem().toString());
+            } else {
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(0, "");
+            }
+
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
+    private AdapterView.OnItemSelectedListener mOnHistoryUnitChangeListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryReductionMode(
+                    mHistoryReductionMode.getSelectedItem().toString());
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
+
     private void inflateConstantExpression() {
         LayoutInflater inflater = LayoutInflater
                 .from(getContext());
@@ -208,13 +310,30 @@ public class ExpressionCreatorView extends FrameLayout {
         mLinearLayout.addView(viewGroup);
 
         mConstantValue = (EditText) findViewById(R.id.constant_expression_value_edittext);
-        /*mConstantSpinner = (Spinner) findViewById(R.id.constant_expression_constant_spinner);
-
-        ArrayAdapter<String> constantAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                getContext().getResources().getStringArray(R.array.constant_types));
-        mConstantSpinner.setAdapter(constantAdapter);*/
+        mConstantValue.addTextChangedListener(mOnConstantChangeListener);
     }
+
+    private TextWatcher mOnConstantChangeListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.length() > 0) {
+                ((ConstantExpression)mExpressionCreatorItem.expressionInterface).setConstant(s.toString());
+            } else {
+                ((ConstantExpression)mExpressionCreatorItem.expressionInterface).setConstant("");
+            }
+
+        }
+    };
 
     private void inflateMathExpression() {
         LayoutInflater inflater = LayoutInflater
@@ -228,7 +347,21 @@ public class ExpressionCreatorView extends FrameLayout {
                 android.R.layout.simple_spinner_dropdown_item,
                 getContext().getResources().getStringArray(R.array.math_operators));
         mMathSpinner.setAdapter(mathAdapter);
+        mMathSpinner.setOnItemSelectedListener(mOnMathOperatorChangeListener);
     }
+
+    private AdapterView.OnItemSelectedListener mOnMathOperatorChangeListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            ((MathExpression)mExpressionCreatorItem.expressionInterface).setOperator(
+                    mMathSpinner.getSelectedItem().toString());
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 
     private void inflateComparisonExpression() {
         LayoutInflater inflater = LayoutInflater
@@ -242,7 +375,21 @@ public class ExpressionCreatorView extends FrameLayout {
                 android.R.layout.simple_spinner_dropdown_item,
                 getContext().getResources().getStringArray(R.array.comparison_operators));
         mComparisonSpinner.setAdapter(logicAdapter);
+        mComparisonSpinner.setOnItemSelectedListener(mOnComparisonOperatorChangeListener);
     }
+
+    private AdapterView.OnItemSelectedListener mOnComparisonOperatorChangeListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            ((ComparisonExpression)mExpressionCreatorItem.expressionInterface).setOperator(
+                    mComparisonSpinner.getSelectedItem().toString());
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 
     private void inflateLogicExpression() {
         LayoutInflater inflater = LayoutInflater
@@ -256,12 +403,22 @@ public class ExpressionCreatorView extends FrameLayout {
                 android.R.layout.simple_spinner_dropdown_item,
                 getContext().getResources().getStringArray(R.array.logic_operators));
         mLogicSpinner.setAdapter(logicAdapter);
+        mLogicSpinner.setOnItemSelectedListener(mOnLogicOperatorChangeListener);
     }
 
-    public void setExpressionCreatorItem(ExpressionCreatorItem expressionCreatorItem) {
-        mExpressionCreatorItem = expressionCreatorItem;
-        //TODO: set items according to this;
-    }
+    private AdapterView.OnItemSelectedListener mOnLogicOperatorChangeListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String operator = getContext().getResources().getStringArray(
+                    R.array.logic_operators_values)[mLogicSpinner.getSelectedItemPosition()];
+            ((LogicExpression)mExpressionCreatorItem.expressionInterface).setOperator(operator);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 
    /* public ExpressionCreatorItem getExpressionCreatorItem() {
         ExpressionType expressionType = (ExpressionType) mSpinner.getSelectedItem();

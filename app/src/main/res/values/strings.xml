@@ -11,6 +11,11 @@
     <string name="expression_math">Math Expression</string>
     <string name="expression_comparison">Comparison Expression</string>
     <string name="expression_logic">Logic Expression</string>
+    <string name="expression_value">Value Expression</string>
+    <string name="expression_tri_state">Tri-State Expression</string>
+    <string name="expression_value_operator">Value Operator Expression</string>
+    <string name="expression_tri_state_operator">Tri-State Operator Expression</string>
+    <string name="expression_tri_math_operator">Tri-Math Operator Expression</string>
 
     <string name="activity_title_builder">Build</string>
 

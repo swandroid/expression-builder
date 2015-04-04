@@ -1,17 +1,15 @@
 package interdroid.swan.swanexpressions.pojos.expressions;
 
-import interdroid.swan.swanexpressions.enums.ExpressionType;
-
 /**
  * Created by steven on 01/04/15.
  */
-public class ConstantExpression implements ExpressionInterface{
+public class LogicExpression implements ExpressionInterface{
 
-    private String constant;
+    private String operator;
 
     @Override
     public String getExpression() {
-        return constant;
+        return operator;
     }
 
     @Override
@@ -19,11 +17,11 @@ public class ConstantExpression implements ExpressionInterface{
         //TODO: for future expression to expression building blocks
     }
 
-    public void setConstant(String constant) {
-        this.constant = constant;
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 
-    public String getConstant() {
-        return constant;
+    public String getOperator() {
+        return operator;
     }
 }

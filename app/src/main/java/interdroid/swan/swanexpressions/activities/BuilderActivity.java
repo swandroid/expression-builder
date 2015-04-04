@@ -49,6 +49,7 @@ public class BuilderActivity extends BaseActivity {
 
         mAddButton = (FloatingActionButton) findViewById(R.id.fab);
         mAddButton.setOnClickListener(mOnAddClickListener);
+        mAddButton.attachToRecyclerView(mRecyclerView);
     }
 
     private View.OnClickListener mOnAddClickListener = new View.OnClickListener() {

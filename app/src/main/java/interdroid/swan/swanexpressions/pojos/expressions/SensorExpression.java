@@ -15,7 +15,7 @@ public class SensorExpression implements ExpressionInterface{
 
     @Override
     public String getExpression() {
-        return String.format("self@%s:%s{%s,%d%s}", sensor, valuePath, historyReductionMode, historyWindow, historyReductionMode);
+        return String.format("self@%s:%s{%s,%d%s}", sensor, valuePath, historyReductionMode, historyWindow, historyUnit);
     }
 
     @Override
