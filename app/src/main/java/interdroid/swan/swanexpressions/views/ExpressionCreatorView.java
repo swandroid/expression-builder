@@ -103,15 +103,6 @@ public class ExpressionCreatorView extends FrameLayout {
         mSpinner.setAdapter(mExpressionTypeAdapter);
         mSpinner.setOnItemSelectedListener(mOnExpressionTypeSelectedListener);
 
-        if (mExpressionCreatorItem.expressionInterface != null
-                && mExpressionCreatorItem.expressionType.getId() == ExpressionType.SENSOR_EXPRESSION.getId()) {
-            Log.d(TAG, "sensor: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getSensor());
-            Log.d(TAG, "valuePath: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getValuePath());
-            Log.d(TAG, "window: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryWindow());
-            Log.d(TAG, "unit: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryUnit());
-            Log.d(TAG, "reduction: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryReductionMode());
-        }
-
         mSpinner.setSelection(getExpressionSelectionToSet(expressionTypes, expressionCreatorItem.expressionType));
 
         //inflateCorrectExpression(expressionCreatorItem.expressionType);
@@ -174,19 +165,28 @@ public class ExpressionCreatorView extends FrameLayout {
             }
             inflateConstantExpression();
         } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
-            mExpressionCreatorItem.expressionType = expressionType;
-            mExpressionCreatorItem.expressionInterface = null;
-            mExpressionCreatorItem.expressionInterface = new MathExpression();
+            if (mExpressionCreatorItem.expressionType.getId() != expressionTypeId
+                    || mExpressionCreatorItem.expressionInterface == null) {
+                mExpressionCreatorItem.expressionType = expressionType;
+                mExpressionCreatorItem.expressionInterface = null;
+                mExpressionCreatorItem.expressionInterface = new MathExpression();
+            }
             inflateMathExpression();
         } else if (expressionTypeId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
-            mExpressionCreatorItem.expressionType = expressionType;
-            mExpressionCreatorItem.expressionInterface = null;
-            mExpressionCreatorItem.expressionInterface = new ComparisonExpression();
+            if (mExpressionCreatorItem.expressionType.getId() != expressionTypeId
+                || mExpressionCreatorItem.expressionInterface == null) {
+                mExpressionCreatorItem.expressionType = expressionType;
+                mExpressionCreatorItem.expressionInterface = null;
+                mExpressionCreatorItem.expressionInterface = new ComparisonExpression();
+            }
             inflateComparisonExpression();
         } else if (expressionTypeId == ExpressionType.LOGIC_EXPRESSION.getId()) {
-            mExpressionCreatorItem.expressionType = expressionType;
-            mExpressionCreatorItem.expressionInterface = null;
-            mExpressionCreatorItem.expressionInterface = new LogicExpression();
+            if (mExpressionCreatorItem.expressionType.getId() != expressionTypeId
+                    || mExpressionCreatorItem.expressionInterface == null) {
+                mExpressionCreatorItem.expressionType = expressionType;
+                mExpressionCreatorItem.expressionInterface = null;
+                mExpressionCreatorItem.expressionInterface = new LogicExpression();
+            }
             inflateLogicExpression();
         }
     }
@@ -235,6 +235,7 @@ public class ExpressionCreatorView extends FrameLayout {
                 android.R.layout.simple_spinner_dropdown_item,
                 getContext().getResources().getStringArray(R.array.history_reduction_modes));
         mHistoryReductionMode.setAdapter(reductionModeAdapter);
+        mHistoryReductionMode.setSelection(getHistoryReductionModeSelectionToSet());
     }
 
     private int getSensorSelectionToSet() {
@@ -284,15 +285,31 @@ public class ExpressionCreatorView extends FrameLayout {
             return 0;
         }
         String historyUnit = ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryUnit();
-        Log.d(TAG, "historyUnit: " + historyUnit);
         if (historyUnit == null || historyUnit.equals("")) {
             return 0;
         }
         String[] historyUnits = getContext().getResources().getStringArray(R.array.time_units_values);
 
         for (int i = 0; i < historyUnits.length; i++) {
-            Log.d(TAG, "historyUnits[i]: " + historyUnits[i]);
             if (historyUnits[i].equals(historyUnit)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private int getHistoryReductionModeSelectionToSet() {
+        if (mExpressionCreatorItem.expressionInterface == null) {
+            return 0;
+        }
+        String historyReductionMode = ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryReductionMode();
+        if (historyReductionMode == null || historyReductionMode.equals("")) {
+            return 0;
+        }
+        String[] historyReductionModes = getContext().getResources().getStringArray(R.array.history_reduction_modes);
+
+        for (int i = 0; i < historyReductionModes.length; i++) {
+            if (historyReductionModes[i].equals(historyReductionMode)) {
                 return i;
             }
         }
@@ -314,11 +331,6 @@ public class ExpressionCreatorView extends FrameLayout {
                         android.R.layout.simple_spinner_dropdown_item, valuePaths);
                 mValuePathSpinner.setAdapter(adapter);
                 mValuePathSpinner.setSelection(getValuePathSelectionToSet());
-                //sensorInfo.getIntent()
-
-               /*for (int i = 0; i < valuePaths.size(); i++) {
-                    Log.d(TAG, "ValuePath: " + i + " " + valuePaths.get(i));
-                }*/
             }
         }
 
@@ -374,7 +386,6 @@ public class ExpressionCreatorView extends FrameLayout {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             String window = mHistoryWindow.getText().toString();
             if (mExpressionCreatorItem.expressionInterface != null) {
-                Log.d(TAG, "window: " + window);
                 if (window.length() > 0) {
                     ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
                             Integer.parseInt(window),
@@ -456,6 +467,24 @@ public class ExpressionCreatorView extends FrameLayout {
                 getContext().getResources().getStringArray(R.array.math_operators));
         mMathSpinner.setAdapter(mathAdapter);
         mMathSpinner.setOnItemSelectedListener(mOnMathOperatorChangeListener);
+        mMathSpinner.setSelection(getMathSelectiontoSet());
+    }
+
+    private int getMathSelectiontoSet() {
+        if (mExpressionCreatorItem.expressionInterface == null) {
+            return 0;
+        }
+        String mathOperator = ((MathExpression)mExpressionCreatorItem.expressionInterface).getOperator();
+        if (mathOperator == null || mathOperator.equals("")) {
+            return 0;
+        }
+        String[] mathOperators = getContext().getResources().getStringArray(R.array.math_operators);
+        for (int i = 0; i < mathOperators.length; i++) {
+            if (mathOperators[i].equals(mathOperator)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private AdapterView.OnItemSelectedListener mOnMathOperatorChangeListener = new AdapterView.OnItemSelectedListener() {
@@ -484,6 +513,24 @@ public class ExpressionCreatorView extends FrameLayout {
                 getContext().getResources().getStringArray(R.array.comparison_operators));
         mComparisonSpinner.setAdapter(logicAdapter);
         mComparisonSpinner.setOnItemSelectedListener(mOnComparisonOperatorChangeListener);
+        mComparisonSpinner.setSelection(getComparisonSelectiontoSet());
+    }
+
+    private int getComparisonSelectiontoSet() {
+        if (mExpressionCreatorItem.expressionInterface == null) {
+            return 0;
+        }
+        String comparisonOperator = ((ComparisonExpression)mExpressionCreatorItem.expressionInterface).getOperator();
+        if (comparisonOperator == null || comparisonOperator.equals("")) {
+            return 0;
+        }
+        String[] comparisonOperators = getContext().getResources().getStringArray(R.array.comparison_operators);
+        for (int i = 0; i < comparisonOperators.length; i++) {
+            if (comparisonOperators[i].equals(comparisonOperator)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private AdapterView.OnItemSelectedListener mOnComparisonOperatorChangeListener = new AdapterView.OnItemSelectedListener() {
@@ -512,6 +559,24 @@ public class ExpressionCreatorView extends FrameLayout {
                 getContext().getResources().getStringArray(R.array.logic_operators));
         mLogicSpinner.setAdapter(logicAdapter);
         mLogicSpinner.setOnItemSelectedListener(mOnLogicOperatorChangeListener);
+        mLogicSpinner.setSelection(getLogicSelectiontoSet());
+    }
+
+    private int getLogicSelectiontoSet() {
+        if (mExpressionCreatorItem.expressionInterface == null) {
+            return 0;
+        }
+        String logicOperator = ((LogicExpression)mExpressionCreatorItem.expressionInterface).getOperator();
+        if (logicOperator == null || logicOperator.equals("")) {
+            return 0;
+        }
+        String[] logicOperators = getContext().getResources().getStringArray(R.array.logic_operators_values);
+        for (int i = 0; i < logicOperators.length; i++) {
+            if (logicOperators[i].equals(logicOperator)) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private AdapterView.OnItemSelectedListener mOnLogicOperatorChangeListener = new AdapterView.OnItemSelectedListener() {
