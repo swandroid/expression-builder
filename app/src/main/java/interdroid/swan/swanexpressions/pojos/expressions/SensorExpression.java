@@ -13,6 +13,14 @@ public class SensorExpression implements ExpressionInterface{
     private String historyUnit;
     private String historyReductionMode;
 
+    public SensorExpression() {
+        this.sensor = "";
+        this.valuePath = "";
+        this.historyWindow = 0;
+        this.historyUnit = "";
+        this.historyReductionMode = "";
+    }
+
     @Override
     public String getExpression() {
         return String.format("self@%s:%s{%s,%d%s}", sensor, valuePath, historyReductionMode, historyWindow, historyUnit);

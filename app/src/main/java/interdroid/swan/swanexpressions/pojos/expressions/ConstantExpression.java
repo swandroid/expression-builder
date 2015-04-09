@@ -9,6 +9,10 @@ public class ConstantExpression implements ExpressionInterface{
 
     private String constant;
 
+    public ConstantExpression() {
+        this.constant = "";
+    }
+
     @Override
     public String getExpression() {
         return constant;

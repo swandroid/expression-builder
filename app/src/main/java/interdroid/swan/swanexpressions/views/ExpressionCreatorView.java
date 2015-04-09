@@ -16,9 +16,9 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
-import interdroid.swan.ExpressionManager;
 import interdroid.swan.SensorInfo;
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.SwanExpressionsApp;
 import interdroid.swan.swanexpressions.adapters.SensorSelectSpinnerAdapter;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
 import interdroid.swan.swanexpressions.pojos.expressions.ComparisonExpression;
@@ -102,7 +102,7 @@ public class ExpressionCreatorView extends FrameLayout {
         mSpinner.setAdapter(mExpressionTypeAdapter);
         mSpinner.setOnItemSelectedListener(mOnExpressionTypeSelectedListener);
 
-        mSpinner.setSelection(getSelectionToSet(expressionTypes, expressionCreatorItem.expressionType));
+        mSpinner.setSelection(getExpressionSelectionToSet(expressionTypes, expressionCreatorItem.expressionType));
         //inflateCorrectExpression(expressionCreatorItem.expressionType);
         //TODO: set items according to this;
     }
@@ -120,7 +120,7 @@ public class ExpressionCreatorView extends FrameLayout {
         }
     }
 
-    private int getSelectionToSet(ExpressionType[] expressionTypes, ExpressionType expressionType) {
+    private int getExpressionSelectionToSet(ExpressionType[] expressionTypes, ExpressionType expressionType) {
         int expressionId = expressionType.getId();
         for (int i = 0; i < expressionTypes.length; i++) {
             if (expressionTypes[i].getId() == expressionId) {
@@ -146,20 +146,35 @@ public class ExpressionCreatorView extends FrameLayout {
     private void inflateCorrectExpression(ExpressionType expressionType) {
         int expressionTypeId = expressionType.getId();
         removeCurrentExpression();
-        mExpressionCreatorItem.expressionType = expressionType;
-        mExpressionCreatorItem.expressionInterface = null;
         if (expressionTypeId == ExpressionType.SENSOR_EXPRESSION.getId()) {
+            if (mExpressionCreatorItem.expressionType.getId() != expressionTypeId
+                    || mExpressionCreatorItem.expressionInterface == null) {
+                mExpressionCreatorItem.expressionType = expressionType;
+                mExpressionCreatorItem.expressionInterface = null;
+                mExpressionCreatorItem.expressionInterface = new SensorExpression();
+            }
             inflateSensorExpression();
         } else if (expressionTypeId == ExpressionType.CONSTANT_EXPRESSION.getId()) {
-            mExpressionCreatorItem.expressionInterface = new ConstantExpression();
+            if (mExpressionCreatorItem.expressionType.getId() != expressionTypeId
+                    || mExpressionCreatorItem.expressionInterface == null) {
+                mExpressionCreatorItem.expressionType = expressionType;
+                mExpressionCreatorItem.expressionInterface = null;
+                mExpressionCreatorItem.expressionInterface = new ConstantExpression();
+            }
             inflateConstantExpression();
         } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
+            mExpressionCreatorItem.expressionType = expressionType;
+            mExpressionCreatorItem.expressionInterface = null;
             mExpressionCreatorItem.expressionInterface = new MathExpression();
             inflateMathExpression();
         } else if (expressionTypeId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
+            mExpressionCreatorItem.expressionType = expressionType;
+            mExpressionCreatorItem.expressionInterface = null;
             mExpressionCreatorItem.expressionInterface = new ComparisonExpression();
             inflateComparisonExpression();
         } else if (expressionTypeId == ExpressionType.LOGIC_EXPRESSION.getId()) {
+            mExpressionCreatorItem.expressionType = expressionType;
+            mExpressionCreatorItem.expressionInterface = null;
             mExpressionCreatorItem.expressionInterface = new LogicExpression();
             inflateLogicExpression();
         }
@@ -177,13 +192,13 @@ public class ExpressionCreatorView extends FrameLayout {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.item_sensor_expression, null);
         mLinearLayout.addView(viewGroup);
         mSensorSpinner = (Spinner) findViewById(R.id.sensor_expression_sensor_spinner);
-        //TODO: try to make faster or save somewhere. In Application class doesn't looks to work
-        mSensors = (ArrayList) ExpressionManager.getSensors(getContext());
+        mSensors = SwanExpressionsApp.getInstance().getSwanSensors();
 
         SensorSelectSpinnerAdapter adapter = new SensorSelectSpinnerAdapter(getContext(),
                 R.layout.spinner_row, mSensors);
         mSensorSpinner.setAdapter(adapter);
         mSensorSpinner.setOnItemSelectedListener(mOnSensorSelectedListener);
+        mSensorSpinner.setSelection(getSensorSelectionToSet());
 
         mValuePathSpinner = (Spinner) findViewById(R.id.sensor_expression_value_path_spinner);
         mValuePathSpinner.setOnItemSelectedListener(mOnValuePathSelectedListener);
@@ -213,12 +228,15 @@ public class ExpressionCreatorView extends FrameLayout {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (mSensors != null) {
                 SensorInfo sensorInfo = mSensors.get(position);
-                mExpressionCreatorItem.expressionInterface = null;
-                mExpressionCreatorItem.expressionInterface = new SensorExpression();
-                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setSensor(sensorInfo.getEntity());
+                if (mExpressionCreatorItem.expressionInterface != null
+                        && !sensorInfo.getEntity().equals(((SensorExpression)mExpressionCreatorItem.expressionInterface).getSensor())) {
+                    mExpressionCreatorItem.expressionInterface = null;
+                    mExpressionCreatorItem.expressionInterface = new SensorExpression();
+                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setSensor(sensorInfo.getEntity());
+                }
                 ArrayList<String> valuePaths = sensorInfo.getValuePaths();
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                                    android.R.layout.simple_spinner_dropdown_item, valuePaths);
+                        android.R.layout.simple_spinner_dropdown_item, valuePaths);
                 mValuePathSpinner.setAdapter(adapter);
 
                 //sensorInfo.getIntent()
@@ -235,10 +253,28 @@ public class ExpressionCreatorView extends FrameLayout {
         }
     };
 
+    private int getSensorSelectionToSet() {
+        if (mExpressionCreatorItem.expressionInterface == null) {
+            return 0;
+        }
+        String sensor = ((SensorExpression)mExpressionCreatorItem.expressionInterface).getSensor();
+        if (sensor == null || sensor.equals("")) {
+            return 0;
+        }
+        for (int i = 0; i < mSensors.size(); i++) {
+            if (mSensors.get(i).getEntity().equals(sensor)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     private AdapterView.OnItemSelectedListener mOnValuePathSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            ((SensorExpression)mExpressionCreatorItem.expressionInterface).setValuePath(mValuePathSpinner.getSelectedItem().toString());
+            if (mExpressionCreatorItem.expressionInterface != null) {
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setValuePath(mValuePathSpinner.getSelectedItem().toString());
+            }
         }
 
         @Override
@@ -273,15 +309,10 @@ public class ExpressionCreatorView extends FrameLayout {
     private AdapterView.OnItemSelectedListener mOnHistoryReductionModeChangeListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String window = mHistoryWindow.getText().toString();
-            if (window.length() > 0) {
-                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
-                        Integer.parseInt(window),
-                        mHistoryUnit.getSelectedItem().toString());
-            } else {
-                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(0, "");
+            if (mExpressionCreatorItem.expressionInterface != null) {
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryReductionMode(
+                        mHistoryReductionMode.getSelectedItem().toString());
             }
-
         }
 
         @Override
@@ -293,8 +324,16 @@ public class ExpressionCreatorView extends FrameLayout {
     private AdapterView.OnItemSelectedListener mOnHistoryUnitChangeListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryReductionMode(
-                    mHistoryReductionMode.getSelectedItem().toString());
+            String window = mHistoryWindow.getText().toString();
+            if (mExpressionCreatorItem.expressionInterface != null) {
+                if (window.length() > 0) {
+                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
+                            Integer.parseInt(window),
+                            mHistoryUnit.getSelectedItem().toString());
+                } else {
+                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(0, "");
+                }
+            }
         }
 
         @Override
@@ -311,6 +350,11 @@ public class ExpressionCreatorView extends FrameLayout {
 
         mConstantValue = (EditText) findViewById(R.id.constant_expression_value_edittext);
         mConstantValue.addTextChangedListener(mOnConstantChangeListener);
+
+        if (mExpressionCreatorItem.expressionInterface != null) {
+            mConstantValue.setText(((ConstantExpression)mExpressionCreatorItem.expressionInterface).getConstant());
+        }
+
     }
 
     private TextWatcher mOnConstantChangeListener = new TextWatcher() {
@@ -419,38 +463,4 @@ public class ExpressionCreatorView extends FrameLayout {
 
         }
     };
-
-   /* public ExpressionCreatorItem getExpressionCreatorItem() {
-        ExpressionType expressionType = (ExpressionType) mSpinner.getSelectedItem();
-        int expressionTypeId = expressionType.getId();
-        removeCurrentExpression();
-        if (expressionTypeId == ExpressionType.SENSOR_EXPRESSION.getId()) {
-            return updateSensorExpression();
-        } else if (expressionTypeId == ExpressionType.CONSTANT_EXPRESSION.getId()) {
-            //return getConstantExpression();
-        } else if (expressionTypeId == ExpressionType.MATH_EXPRESSION.getId()) {
-            //return getMathExpression();
-        } else if (expressionTypeId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
-            //return getComparisonExpression();
-        } else if (expressionTypeId == ExpressionType.LOGIC_EXPRESSION.getId()) {
-            //return getLogicExpression();
-        }
-        return null;
-    }
-
-
-
-    private SensorExpression updateSensorExpression() {
-        SensorInfo sensorInfo = (SensorInfo) mSensorSpinner.getSelectedItem();
-        sensorExpression.setSensor(sensorInfo.getEntity());
-
-        sensorExpression.setValuePath(mValuePathSpinner.getSelectedItem().toString());
-
-        sensorExpression.setHistoryWindowAndUnit(Integer.parseInt(mHistoryWindow.getText().toString()),
-                mHistoryUnit.getSelectedItem().toString());
-
-        sensorExpression.setHistoryReductionMode(mHistoryReductionMode.getSelectedItem().toString());
-
-        return sensorExpression;
-    }*/
 }
