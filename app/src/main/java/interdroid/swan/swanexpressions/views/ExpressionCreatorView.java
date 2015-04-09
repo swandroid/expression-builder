@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +103,17 @@ public class ExpressionCreatorView extends FrameLayout {
         mSpinner.setAdapter(mExpressionTypeAdapter);
         mSpinner.setOnItemSelectedListener(mOnExpressionTypeSelectedListener);
 
+        if (mExpressionCreatorItem.expressionInterface != null
+                && mExpressionCreatorItem.expressionType.getId() == ExpressionType.SENSOR_EXPRESSION.getId()) {
+            Log.d(TAG, "sensor: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getSensor());
+            Log.d(TAG, "valuePath: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getValuePath());
+            Log.d(TAG, "window: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryWindow());
+            Log.d(TAG, "unit: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryUnit());
+            Log.d(TAG, "reduction: " + ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryReductionMode());
+        }
+
         mSpinner.setSelection(getExpressionSelectionToSet(expressionTypes, expressionCreatorItem.expressionType));
+
         //inflateCorrectExpression(expressionCreatorItem.expressionType);
         //TODO: set items according to this;
     }
@@ -203,55 +214,28 @@ public class ExpressionCreatorView extends FrameLayout {
         mValuePathSpinner = (Spinner) findViewById(R.id.sensor_expression_value_path_spinner);
         mValuePathSpinner.setOnItemSelectedListener(mOnValuePathSelectedListener);
 
+        int historySelectionToSet = getHistoryUnitSelectionToSet();
+
         mHistoryWindow = (EditText) findViewById(R.id.sensor_expression_history_window_edittext);
         mHistoryWindow.addTextChangedListener(mOnHistoryWindowChangeListener);
+        mHistoryWindow.setText(getHistoryWindowToSet());
 
         mHistoryUnit = (Spinner) findViewById(R.id.sensor_expression_history_unit_spinner);
-        mHistoryUnit.setOnItemSelectedListener(mOnHistoryUnitChangeListener);
-
-        mHistoryReductionMode = (Spinner) findViewById(R.id.sensor_expression_history_reduction_spinner);
-        mHistoryReductionMode.setOnItemSelectedListener(mOnHistoryReductionModeChangeListener);
-
         ArrayAdapter<String> unitAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 getContext().getResources().getStringArray(R.array.time_units_values));
         mHistoryUnit.setAdapter(unitAdapter);
+        mHistoryUnit.setOnItemSelectedListener(mOnHistoryUnitChangeListener);
+        mHistoryUnit.setSelection(historySelectionToSet);
+
+        mHistoryReductionMode = (Spinner) findViewById(R.id.sensor_expression_history_reduction_spinner);
+        mHistoryReductionMode.setOnItemSelectedListener(mOnHistoryReductionModeChangeListener);
 
         ArrayAdapter<String> reductionModeAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 getContext().getResources().getStringArray(R.array.history_reduction_modes));
         mHistoryReductionMode.setAdapter(reductionModeAdapter);
     }
-
-    private AdapterView.OnItemSelectedListener mOnSensorSelectedListener = new AdapterView.OnItemSelectedListener() {
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            if (mSensors != null) {
-                SensorInfo sensorInfo = mSensors.get(position);
-                if (mExpressionCreatorItem.expressionInterface != null
-                        && !sensorInfo.getEntity().equals(((SensorExpression)mExpressionCreatorItem.expressionInterface).getSensor())) {
-                    mExpressionCreatorItem.expressionInterface = null;
-                    mExpressionCreatorItem.expressionInterface = new SensorExpression();
-                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setSensor(sensorInfo.getEntity());
-                }
-                ArrayList<String> valuePaths = sensorInfo.getValuePaths();
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                        android.R.layout.simple_spinner_dropdown_item, valuePaths);
-                mValuePathSpinner.setAdapter(adapter);
-
-                //sensorInfo.getIntent()
-
-               /*for (int i = 0; i < valuePaths.size(); i++) {
-                    Log.d(TAG, "ValuePath: " + i + " " + valuePaths.get(i));
-                }*/
-            }
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
-    };
 
     private int getSensorSelectionToSet() {
         if (mExpressionCreatorItem.expressionInterface == null) {
@@ -268,6 +252,81 @@ public class ExpressionCreatorView extends FrameLayout {
         }
         return 0;
     }
+
+    private int getValuePathSelectionToSet() {
+        String valuePath = ((SensorExpression)mExpressionCreatorItem.expressionInterface).getValuePath();
+        if (valuePath == null || valuePath.equals("")) {
+            return 0;
+        }
+        SensorInfo sensorInfo = mSensors.get(mSensorSpinner.getSelectedItemPosition());
+        ArrayList<String> valuePaths = sensorInfo.getValuePaths();
+        for (int i = 0; i < valuePaths.size(); i++) {
+            if (valuePaths.get(i).equals(valuePath)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private String getHistoryWindowToSet() {
+        if (mExpressionCreatorItem.expressionInterface == null) {
+            return "0";
+        }
+        int historyWindow = ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryWindow();
+        if (historyWindow == 0) {
+            return "0";
+        }
+        return "" + historyWindow;
+    }
+
+    private int getHistoryUnitSelectionToSet() {
+        if (mExpressionCreatorItem.expressionInterface == null) {
+            return 0;
+        }
+        String historyUnit = ((SensorExpression)mExpressionCreatorItem.expressionInterface).getHistoryUnit();
+        Log.d(TAG, "historyUnit: " + historyUnit);
+        if (historyUnit == null || historyUnit.equals("")) {
+            return 0;
+        }
+        String[] historyUnits = getContext().getResources().getStringArray(R.array.time_units_values);
+
+        for (int i = 0; i < historyUnits.length; i++) {
+            Log.d(TAG, "historyUnits[i]: " + historyUnits[i]);
+            if (historyUnits[i].equals(historyUnit)) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    private AdapterView.OnItemSelectedListener mOnSensorSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            if (mSensors != null) {
+                SensorInfo sensorInfo = mSensors.get(position);
+                if (mExpressionCreatorItem.expressionInterface != null
+                        && !sensorInfo.getEntity().equals(((SensorExpression) mExpressionCreatorItem.expressionInterface).getSensor())) {
+                    ((SensorExpression) mExpressionCreatorItem.expressionInterface).setSensor(sensorInfo.getEntity());
+                    ((SensorExpression) mExpressionCreatorItem.expressionInterface).setValuePath("");
+                }
+                ArrayList<String> valuePaths = sensorInfo.getValuePaths();
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
+                        android.R.layout.simple_spinner_dropdown_item, valuePaths);
+                mValuePathSpinner.setAdapter(adapter);
+                mValuePathSpinner.setSelection(getValuePathSelectionToSet());
+                //sensorInfo.getIntent()
+
+               /*for (int i = 0; i < valuePaths.size(); i++) {
+                    Log.d(TAG, "ValuePath: " + i + " " + valuePaths.get(i));
+                }*/
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+
+        }
+    };
 
     private AdapterView.OnItemSelectedListener mOnValuePathSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
@@ -299,19 +358,30 @@ public class ExpressionCreatorView extends FrameLayout {
             if (s.length() < 1) {
                 ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(0, "");
             } else {
-                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
-                        Integer.parseInt(s.toString()),
-                        mHistoryUnit.getSelectedItem().toString());
+                if (mHistoryUnit != null) {
+                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
+                            Integer.parseInt(s.toString()),
+                            mHistoryUnit.getSelectedItem().toString());
+                }
             }
         }
     };
 
-    private AdapterView.OnItemSelectedListener mOnHistoryReductionModeChangeListener = new AdapterView.OnItemSelectedListener() {
+
+
+    private AdapterView.OnItemSelectedListener mOnHistoryUnitChangeListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            String window = mHistoryWindow.getText().toString();
             if (mExpressionCreatorItem.expressionInterface != null) {
-                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryReductionMode(
-                        mHistoryReductionMode.getSelectedItem().toString());
+                Log.d(TAG, "window: " + window);
+                if (window.length() > 0) {
+                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
+                            Integer.parseInt(window),
+                            mHistoryUnit.getSelectedItem().toString());
+                } else {
+                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(0, "");
+                }
             }
         }
 
@@ -321,18 +391,12 @@ public class ExpressionCreatorView extends FrameLayout {
         }
     };
 
-    private AdapterView.OnItemSelectedListener mOnHistoryUnitChangeListener = new AdapterView.OnItemSelectedListener() {
+    private AdapterView.OnItemSelectedListener mOnHistoryReductionModeChangeListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String window = mHistoryWindow.getText().toString();
             if (mExpressionCreatorItem.expressionInterface != null) {
-                if (window.length() > 0) {
-                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(
-                            Integer.parseInt(window),
-                            mHistoryUnit.getSelectedItem().toString());
-                } else {
-                    ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryWindowAndUnit(0, "");
-                }
+                ((SensorExpression)mExpressionCreatorItem.expressionInterface).setHistoryReductionMode(
+                        mHistoryReductionMode.getSelectedItem().toString());
             }
         }
 
