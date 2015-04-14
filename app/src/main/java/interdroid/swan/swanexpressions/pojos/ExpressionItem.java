@@ -5,8 +5,27 @@ package interdroid.swan.swanexpressions.pojos;
  */
 public class ExpressionItem {
 
+    public static int currectId = 5000;
+
     public int id;
     public String name;
+    public String stringId;
+    public String expression;
     public String valuation;
+
+    public ExpressionItem(String name, String expression) {
+        this.id = currectId++;
+        this.name = name;
+        this.expression = expression;
+        this.stringId = name + "_" + id;
+    }
+
+    public void updateValuation(String valuation) {
+        this.valuation = valuation;
+    }
+
+    public String getStringId() {
+        return stringId;
+    }
 
 }

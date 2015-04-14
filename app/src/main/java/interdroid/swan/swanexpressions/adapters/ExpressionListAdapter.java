@@ -1,5 +1,6 @@
 package interdroid.swan.swanexpressions.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import interdroid.swan.ExpressionManager;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.pojos.ExpressionItem;
 
@@ -62,6 +64,7 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         ExpressionItem expression = mExpressions.get(i);
         viewHolder.mExpressionName.setText(expression.name);
+        viewHolder.mExpressionValuation.setText(expression.valuation);
         viewHolder.mPosition = i;
     }
 
@@ -75,6 +78,11 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
         notifyDataSetChanged();
     }
 
+    public void addExpression(ExpressionItem expression) {
+        mExpressions.add(expression);
+        notifyItemInserted(mExpressions.size() - 1);
+    }
+
     //TODO: something to update the valuation
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -86,4 +94,19 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
             }
         }
     };
+
+    public void updateExpression(String stringId, String value) {
+        for (int i = 0; i < mExpressions.size(); i++) {
+            if (mExpressions.get(i).getStringId().equals(stringId)) {
+                mExpressions.get(i).updateValuation(value);
+                notifyItemChanged(i);
+            }
+        }
+    }
+
+    public void unregisterExpressions(Context context) {
+        for (int i = 0; i < mExpressions.size(); i++) {
+            ExpressionManager.unregisterExpression(context, mExpressions.get(i).getStringId());
+        }
+    }
 }

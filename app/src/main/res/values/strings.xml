@@ -19,6 +19,8 @@
 
     <string name="activity_title_builder">Build</string>
 
+    <string name="label_name">NAME</string>
+
     <string name="label_sensor">SENSOR</string>
     <string name="label_value_path">VALUE PATH</string>
     <string name="label_history">HISTORY</string>

@@ -1,11 +1,14 @@
 package interdroid.swan.swanexpressions.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
@@ -18,6 +21,13 @@ import interdroid.swan.swanexpressions.adapters.ExpressionListAdapter;
  * Created by steven on 01/04/15.
  */
 public class BuilderActivity extends BaseActivity {
+
+    private static final String TAG = BuilderActivity.class.getSimpleName();
+
+    public static final String KEY_EXTRA_NAME = "Name";
+    public static final String KEY_EXTRA_EXPRESSION = "Expression";
+
+    private EditText mName;
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -39,6 +49,7 @@ public class BuilderActivity extends BaseActivity {
     }
 
     private void getViews() {
+        mName = (EditText) findViewById(R.id.builder_activity_name_edittext);
         mRecyclerView = (RecyclerView) findViewById(R.id.builder_activity_recyclerview);
 
         mLayoutManager = new LinearLayoutManager(this);
@@ -77,7 +88,14 @@ public class BuilderActivity extends BaseActivity {
     }
 
     private void buildExpression() {
+        String name = mName.getText().toString();
         String expression = mAdapter.buildExpression();
-        Toast.makeText(getApplicationContext(), "Expression: " + expression, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent();
+        Log.d(TAG, name);
+        intent.putExtra(KEY_EXTRA_NAME, name);
+        intent.putExtra(KEY_EXTRA_EXPRESSION, expression);
+        setResult(RESULT_OK, intent);
+        finish();
+        //Toast.makeText(getApplicationContext(), "Expression: " + expression, Toast.LENGTH_LONG).show();
     }
 }

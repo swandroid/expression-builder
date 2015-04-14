@@ -11,6 +11,42 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar_extra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/grey_white_1000"
+        app:theme="@style/ThemeOverlay.AppCompat"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:elevation="@dimen/toolbar_elevation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/activity_half_vertical_margin"
+            android:paddingBottom="@dimen/activity_half_vertical_margin"
+            android:paddingLeft="@dimen/activity_half_horizontal_margin"
+            android:paddingRight="@dimen/activity_half_horizontal_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/label_name"
+                android:textColor="@color/text_secondary_color"
+                android:textSize="@dimen/abc_text_size_small_material"/>
+
+            <EditText
+                android:id="@+id/builder_activity_name_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

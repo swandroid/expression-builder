@@ -25,6 +25,7 @@ public class ExpressionCreatorListAdapter extends RecyclerView.Adapter<Expressio
     public ExpressionCreatorListAdapter() {
         mExpressionCreators = new ArrayList<ExpressionCreatorItem>();
         //mOnExpressionCreatorClickListener = onClickListener;
+        addExpressionCreator();
     }
 
     public interface OnExpressionCreatorClickListener {
