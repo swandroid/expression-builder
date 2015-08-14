@@ -15,7 +15,17 @@ public class ConstantExpression implements ExpressionInterface{
 
     @Override
     public String getExpression() {
-        return constant;
+        try {
+            Long.parseLong(constant);
+            return constant;
+        } catch (NumberFormatException e1) {
+            try {
+                Double.parseDouble(constant);
+                return constant;
+            } catch (NumberFormatException e2) {
+                return "'" + constant + "'";
+            }
+        }
     }
 
     @Override

@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity {
 
         // Verify that the intent will resolve to an activity
         if (sendIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(sendIntent, EXPRESSION_BUILDER_REQUEST);
+            startActivityForResult(sendIntent, EXPRESSION_BUILDER_OLD_REQUEST);
         }
     }
 
@@ -82,7 +82,7 @@ public class MainActivity extends BaseActivity {
         //registerExpression(null);
         /*mSensorSpinner = (Spinner) findViewById(R.id.main_sensor_spinner);
         SensorSelectSpinnerAdapter adapter = new SensorSelectSpinnerAdapter(this,
-                R.layout.spinner_row, ExpressionManager.getSensors(MainActivity.this));
+                R.layout.item_sensor_spinner, ExpressionManager.getSensors(MainActivity.this));
         mSensorSpinner.setAdapter(adapter);*/
         /*try {
             ExpressionManager.registerValueExpression(this, "1234", (ValueExpression) ExpressionFactory.parse("self@movement:x{MAX, 1000}"), new ValueExpressionListener() {
@@ -101,17 +101,13 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
+        /*if (requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String expression = data.getStringExtra("Expression");
                 Toast.makeText(getApplicationContext(), expression, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "expression result: " + expression);
-                // The user picked a contact.
-                // The Intent's data Uri identifies which contact was selected.
-
-                // Do something with the contact here (bigger example below)
             }
-        } else if (requestCode == EXPRESSION_BUILDER_REQUEST) {
+        } else */if (requestCode == EXPRESSION_BUILDER_REQUEST || requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String name = data.getStringExtra(BuilderActivity.KEY_EXTRA_NAME);
                 String expression = data.getStringExtra(BuilderActivity.KEY_EXTRA_EXPRESSION);

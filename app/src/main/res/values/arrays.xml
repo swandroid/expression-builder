@@ -54,8 +54,8 @@
        <!-- TODO: check how these work in swan
         <item>regex</item>
         <item>startsWith</item>
-        <item>endsWith</item>
-        <item>contains</item>-->
+        <item>endsWith</item>-->
+        <item>contains</item>
     </string-array>
 
     <string-array name="logic_operators">
