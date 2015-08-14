@@ -2,8 +2,10 @@ package interdroid.swan.swanexpressions.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,13 +16,14 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.activities.preferences.AppCompatPreferenceActivity;
 import interdroid.swan.swanexpressions.adapters.ExpressionCreatorListAdapter;
 import interdroid.swan.swanexpressions.adapters.ExpressionListAdapter;
 
 /**
  * Created by steven on 01/04/15.
  */
-public class BuilderActivity extends BaseActivity {
+public class BuilderActivity extends AppCompatPreferenceActivity {
 
     private static final String TAG = BuilderActivity.class.getSimpleName();
 
@@ -34,19 +37,26 @@ public class BuilderActivity extends BaseActivity {
     private ExpressionCreatorListAdapter mAdapter;
 
     private FloatingActionButton mAddButton;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setActionBarIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-
+        //getSupportActionBar().setIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        setContentView(R.layout.activity_builder);
+        //setActionBarIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getViews();
     }
 
-    @Override
+    /*@Override
     protected int getLayoutResource() {
         return R.layout.activity_builder;
-    }
+    }*/
 
     private void getViews() {
         mName = (EditText) findViewById(R.id.builder_activity_name_edittext);
@@ -60,7 +70,7 @@ public class BuilderActivity extends BaseActivity {
 
         mAddButton = (FloatingActionButton) findViewById(R.id.fab);
         mAddButton.setOnClickListener(mOnAddClickListener);
-        mAddButton.attachToRecyclerView(mRecyclerView);
+        //mAddButton.attachToRecyclerView(mRecyclerView);
     }
 
     private View.OnClickListener mOnAddClickListener = new View.OnClickListener() {
