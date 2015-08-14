@@ -7,10 +7,15 @@
     <string name="action_save">Save</string>
 
     <string name="expression_sensor">Sensor Expression</string>
+    <string name="expression_sensor_sum">Local or remote sensor</string>
     <string name="expression_constant">Constant Expression</string>
+    <string name="expression_constant_sum">A number or text</string>
     <string name="expression_math">Math Expression</string>
+    <string name="expression_math_sum">\"+\", \"-\", \"*\", \"/\", \"%\"</string>
     <string name="expression_comparison">Comparison Expression</string>
+    <string name="expression_comparison_sum">\"==\", \"&gt;=\", \"&lt;=\", \"&gt;\", \"&lt;\", \"!=\", \"regex\", \"contains\"</string>
     <string name="expression_logic">Logic Expression</string>
+    <string name="expression_logic_sum">\"AND\", \"OR\"</string>
     <string name="expression_value">Value Expression</string>
     <string name="expression_tri_state">Tri-State Expression</string>
     <string name="expression_value_operator">Value Operator Expression</string>

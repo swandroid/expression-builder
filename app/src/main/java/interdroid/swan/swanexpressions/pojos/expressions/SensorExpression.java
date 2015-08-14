@@ -23,6 +23,9 @@ public class SensorExpression implements ExpressionInterface{
 
     @Override
     public String getExpression() {
+        if (sensor.equals("time")) {
+            return String.format("self@%s:%s", sensor, valuePath);
+        }
         return String.format("self@%s:%s{%s,%d%s}", sensor, valuePath, historyReductionMode, historyWindow, historyUnit);
     }
 

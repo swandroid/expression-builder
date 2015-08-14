@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import interdroid.swan.SensorInfo;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.SwanExpressionsApp;
+import interdroid.swan.swanexpressions.adapters.ExpressionTypeSpinnerAdapter;
 import interdroid.swan.swanexpressions.adapters.SensorSelectSpinnerAdapter;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
 import interdroid.swan.swanexpressions.pojos.expressions.ComparisonExpression;
@@ -40,7 +40,7 @@ public class ExpressionCreatorView extends FrameLayout {
     private LinearLayout mLinearLayout;
     private Spinner mSpinner;
     //TODO: make a custom adapter (maybe with images to show what a specific type of expression is
-    private ArrayAdapter<ExpressionType> mExpressionTypeAdapter;
+    private ExpressionTypeSpinnerAdapter mExpressionTypeAdapter;
 
     //TODO: maybe move to custom view or something
     //SENSOR EXPRESSION
@@ -98,7 +98,7 @@ public class ExpressionCreatorView extends FrameLayout {
         mExpressionCreatorItem = expressionCreatorItem;
 
         ExpressionType[] expressionTypes = getPossibleExpressionTypes();
-        mExpressionTypeAdapter = new ArrayAdapter<ExpressionType>(getContext(),
+        mExpressionTypeAdapter = new ExpressionTypeSpinnerAdapter(getContext(),
                 android.R.layout.simple_spinner_dropdown_item, expressionTypes);
         mSpinner.setAdapter(mExpressionTypeAdapter);
         mSpinner.setOnItemSelectedListener(mOnExpressionTypeSelectedListener);
@@ -206,7 +206,7 @@ public class ExpressionCreatorView extends FrameLayout {
         mSensors = SwanExpressionsApp.getInstance().getSwanSensors();
 
         SensorSelectSpinnerAdapter adapter = new SensorSelectSpinnerAdapter(getContext(),
-                R.layout.spinner_row, mSensors);
+                R.layout.item_sensor_spinner, mSensors);
         mSensorSpinner.setAdapter(adapter);
         mSensorSpinner.setOnItemSelectedListener(mOnSensorSelectedListener);
         mSensorSpinner.setSelection(getSensorSelectionToSet());
@@ -553,6 +553,8 @@ public class ExpressionCreatorView extends FrameLayout {
         mLinearLayout.addView(viewGroup);
 
         mLogicSpinner = (Spinner) findViewById(R.id.logic_expression_logic_spinner);
+
+
 
         ArrayAdapter<String> logicAdapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,

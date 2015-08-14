@@ -5,24 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
 
-import interdroid.swan.SensorInfo;
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.enums.ExpressionType;
 
-public class SensorSelectSpinnerAdapter extends ArrayAdapter<SensorInfo> {
+public class ExpressionTypeSpinnerAdapter extends ArrayAdapter<ExpressionType> {
 
 	Context context;
-	List<SensorInfo> swanSensorList;
+	ExpressionType[] mExpressionTypes;
 
-	public SensorSelectSpinnerAdapter(Context context, int textViewResourceId,
-									  List<SensorInfo> swanSensorList) {
-		super(context, textViewResourceId, swanSensorList);
+	public ExpressionTypeSpinnerAdapter(Context context, int textViewResourceId,
+										ExpressionType[] expressionTypes) {
+		super(context, textViewResourceId, expressionTypes);
 		this.context = context;
-		this.swanSensorList = swanSensorList;
+		this.mExpressionTypes = expressionTypes;
 	}
 
 	@Override
@@ -38,16 +37,13 @@ public class SensorSelectSpinnerAdapter extends ArrayAdapter<SensorInfo> {
 	public View getCustomView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.item_sensor_spinner, null);
+					R.layout.item_expression_type_spinner, null);
 		}
-		TextView label = (TextView) convertView.findViewById(R.id.sensors);
-		label.setText(swanSensorList.get(position).getEntity());
+		TextView type = (TextView) convertView.findViewById(R.id.item_expression_type_name);
+		type.setText(type.getContext().getString(mExpressionTypes[position].getNameId()));
 
-		TextView sub = (TextView) convertView.findViewById(R.id.valuepaths);
-		sub.setText(swanSensorList.get(position).getValuePaths().toString());
-
-		ImageView icon = (ImageView) convertView.findViewById(R.id.image);
-		icon.setImageDrawable(swanSensorList.get(position).getIcon());
+		TextView summary = (TextView) convertView.findViewById(R.id.item_expression_type_summary);
+		summary.setText(summary.getContext().getString(mExpressionTypes[position].getSummaryId()));
 
 		return convertView;
 	}
