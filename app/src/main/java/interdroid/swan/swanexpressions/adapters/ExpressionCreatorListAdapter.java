@@ -90,10 +90,32 @@ public class ExpressionCreatorListAdapter extends RecyclerView.Adapter<Expressio
 
     public String buildExpression() {
         StringBuilder sb = new StringBuilder();
+        //TODO: check if expression contains "contains" and/or "regex"
+        boolean[] shouldAddQuotes = new boolean[mExpressionCreators.size()];
         for (int i = 0; i < mExpressionCreators.size(); i++) {
             ExpressionCreatorItem expressionCreatorItem = mExpressionCreators.get(i);
-            sb.append(expressionCreatorItem.expressionInterface.getExpression());
-            sb.append(" ");
+            if (expressionCreatorItem.expressionType == ExpressionType.COMPARISON_EXPRESSION
+                    && (expressionCreatorItem.expressionInterface.getExpression().equals("contains")
+                    || expressionCreatorItem.expressionInterface.getExpression().equals("regex"))) {
+                //TODO: errorChecking
+                if (mExpressionCreators.get(i-1).expressionType == ExpressionType.CONSTANT_EXPRESSION) {
+                    shouldAddQuotes[i-1] = true;
+                }
+                if (mExpressionCreators.get(i+1).expressionType == ExpressionType.CONSTANT_EXPRESSION) {
+                    shouldAddQuotes[i+1] = true;
+                }
+            }
+        }
+        for (int i = 0; i < mExpressionCreators.size(); i++) {
+            ExpressionCreatorItem expressionCreatorItem = mExpressionCreators.get(i);
+            if (shouldAddQuotes[i]) {
+                sb.append("'");
+                sb.append(expressionCreatorItem.expressionInterface.getExpression());
+                sb.append("' ");
+            } else {
+                sb.append(expressionCreatorItem.expressionInterface.getExpression());
+                sb.append(" ");
+            }
         }
         if (mExpressionCreators.size() > 0) {
             sb.deleteCharAt(sb.length() - 1);
