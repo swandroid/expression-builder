@@ -1,6 +1,8 @@
 package interdroid.swan.swanexpressions.views;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -15,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import interdroid.swan.SensorInfo;
 import interdroid.swan.swanexpressions.R;
@@ -81,6 +85,7 @@ public class ExpressionCreatorView extends FrameLayout {
         init();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ExpressionCreatorView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
@@ -331,6 +336,12 @@ public class ExpressionCreatorView extends FrameLayout {
                         android.R.layout.simple_spinner_dropdown_item, valuePaths);
                 mValuePathSpinner.setAdapter(adapter);
                 mValuePathSpinner.setSelection(getValuePathSelectionToSet());
+
+                Set<String> keys = new HashSet<String>();
+                keys.addAll(sensorInfo.getConfiguration().keySet());
+                if (keys.size() > 0) {
+                    //TODO: add a button to show there are extra options to set
+                }
             }
         }
 
