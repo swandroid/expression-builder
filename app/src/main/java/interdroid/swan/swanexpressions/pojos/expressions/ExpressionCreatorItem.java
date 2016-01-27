@@ -1,5 +1,6 @@
 package interdroid.swan.swanexpressions.pojos.expressions;
 
+import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
 
 /**
@@ -10,6 +11,8 @@ public class ExpressionCreatorItem {
     public String name;
     public ExpressionType possibleExpressionType;
     public ExpressionType expressionType;
+    public int possibleExpressionTypeInt;
+    public int expressionTypeInt;
     public ExpressionInterface expressionInterface;
 
     public ExpressionCreatorItem() {
@@ -23,6 +26,13 @@ public class ExpressionCreatorItem {
         this.name = "";
         this.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
         this.expressionType = expressionType;
+        this.expressionInterface = null;
+    }
+
+    public ExpressionCreatorItem(int expressionTypeInt) {
+        this.name = "";
+        this.possibleExpressionTypeInt = Constants.VALUE_EXPRESSION;
+        this.expressionTypeInt = expressionTypeInt;
         this.expressionInterface = null;
     }
 }

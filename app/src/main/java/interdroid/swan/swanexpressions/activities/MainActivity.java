@@ -1,5 +1,7 @@
 package interdroid.swan.swanexpressions.activities;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,10 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Spinner;
 import android.widget.Toast;
-
-import com.melnykov.fab.FloatingActionButton;
 
 import interdroid.swan.ExpressionListener;
 import interdroid.swan.ExpressionManager;
@@ -23,7 +22,6 @@ import interdroid.swan.swansong.ExpressionFactory;
 import interdroid.swan.swansong.ExpressionParseException;
 import interdroid.swan.swansong.TimestampedValue;
 import interdroid.swan.swansong.TriState;
-import interdroid.swan.swansong.TriStateExpression;
 
 
 public class MainActivity extends BaseActivity {
@@ -169,7 +167,7 @@ public class MainActivity extends BaseActivity {
     private View.OnClickListener mOnAddClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this, BuilderActivity.class);
+            Intent intent = new Intent(MainActivity.this, BuilderActivityNew.class);
             startActivityForResult(intent, EXPRESSION_BUILDER_REQUEST);
             overridePendingTransition(R.anim.right_slide_in, R.anim.fade_out);
         }
