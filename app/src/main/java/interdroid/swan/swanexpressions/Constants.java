@@ -12,4 +12,6 @@ public class Constants {
     public static final int LOGIC_EXPRESSION = 4;
     public static final int VALUE_EXPRESSION = 5;
 
+    public static final String EXTRA_EXPRESSION_CREATOR = "extra_expression_creator";
+
 }

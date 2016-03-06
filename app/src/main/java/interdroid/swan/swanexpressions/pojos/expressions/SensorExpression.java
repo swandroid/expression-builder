@@ -1,11 +1,11 @@
 package interdroid.swan.swanexpressions.pojos.expressions;
 
-import interdroid.swan.swanexpressions.enums.ExpressionType;
+import android.os.Parcel;
 
 /**
  * Created by steven on 01/04/15.
  */
-public class SensorExpression implements ExpressionInterface{
+public class SensorExpression implements ExpressionInterface {
 
     private String sensor;
     private String valuePath;
@@ -20,6 +20,40 @@ public class SensorExpression implements ExpressionInterface{
         this.historyUnit = "";
         this.historyReductionMode = "";
     }
+
+    protected SensorExpression(Parcel in) {
+        sensor = in.readString();
+        valuePath = in.readString();
+        historyWindow = in.readInt();
+        historyUnit = in.readString();
+        historyReductionMode = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(sensor);
+        dest.writeString(valuePath);
+        dest.writeInt(historyWindow);
+        dest.writeString(historyUnit);
+        dest.writeString(historyReductionMode);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<SensorExpression> CREATOR = new Creator<SensorExpression>() {
+        @Override
+        public SensorExpression createFromParcel(Parcel in) {
+            return new SensorExpression(in);
+        }
+
+        @Override
+        public SensorExpression[] newArray(int size) {
+            return new SensorExpression[size];
+        }
+    };
 
     @Override
     public String getExpression() {

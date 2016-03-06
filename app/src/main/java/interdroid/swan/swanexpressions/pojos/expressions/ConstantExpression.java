@@ -1,17 +1,33 @@
 package interdroid.swan.swanexpressions.pojos.expressions;
 
-import interdroid.swan.swanexpressions.enums.ExpressionType;
+import android.os.Parcel;
 
 /**
  * Created by steven on 01/04/15.
  */
-public class ConstantExpression implements ExpressionInterface{
+public class ConstantExpression implements ExpressionInterface {
 
     private String constant;
 
     public ConstantExpression() {
         this.constant = "";
     }
+
+    protected ConstantExpression(Parcel in) {
+        constant = in.readString();
+    }
+
+    public static final Creator<ConstantExpression> CREATOR = new Creator<ConstantExpression>() {
+        @Override
+        public ConstantExpression createFromParcel(Parcel in) {
+            return new ConstantExpression(in);
+        }
+
+        @Override
+        public ConstantExpression[] newArray(int size) {
+            return new ConstantExpression[size];
+        }
+    };
 
     @Override
     public String getExpression() {
@@ -39,5 +55,15 @@ public class ConstantExpression implements ExpressionInterface{
 
     public String getConstant() {
         return constant;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(constant);
     }
 }

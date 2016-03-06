@@ -2,8 +2,7 @@ package interdroid.swan.swanexpressions.activities;
 
 import com.melnykov.fab.FloatingActionButton;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +10,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 
+import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.adapters.ExpressionCreatorListAdapterNew;
+import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 
 /**
  * Created by steven on 01/04/15.
@@ -23,6 +23,8 @@ import interdroid.swan.swanexpressions.adapters.ExpressionCreatorListAdapterNew;
 public class BuilderActivityNew extends BaseActivity {
 
     private static final String TAG = BuilderActivityNew.class.getSimpleName();
+
+    private static final int EXPRESSION_REQUEST_ID = 1240;
 
     public static final String KEY_EXTRA_NAME = "Name";
     public static final String KEY_EXTRA_EXPRESSION = "Expression";
@@ -73,29 +75,18 @@ public class BuilderActivityNew extends BaseActivity {
     private View.OnClickListener mOnAddClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            mAdapter.addExpressionCreator();
+            addExpressionCreator();
+//            mAdapter.addExpressionCreator();
         }
     };
 
-    private void showSelectionDialog() {
-        if (!isFinishing()) {
-            try {
-                new AlertDialog.Builder(BuilderActivityNew.this)
-                        .setTitle(R.string.app_name)
-                        .setItems(new {"Sensor", "Constant"}, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                            }
-                        })
-                        .show();
-            } catch (WindowManager.BadTokenException e) {
-                Timber.w("Could not show error dialog", e);
-                //Activity was not alive anymore
-            }
-        }
+    private void addExpressionCreator() {
+        //TODO: create correct ExpressionCreatorItem
+        ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
+        Intent intent = new Intent(BuilderActivityNew.this, ExpressionSelectionActivity.class);
+        intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, expressionCreatorItem);
+        startActivityForResult(intent, EXPRESSION_REQUEST_ID);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

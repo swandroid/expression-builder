@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.enums.ExpressionType;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 
 /**
@@ -153,35 +154,35 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
 //        return sb.toString();
 //    }
 //
-//    private ExpressionCreatorItem getNextTypeOfExpression() {
-//        ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
-//        if (mExpressionCreators.size() < 1) {
-//            expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
-//        } else {
-//            ExpressionCreatorItem previous = mExpressionCreators.get(mExpressionCreators.size() - 1);
-//            int previousId = previous.possibleExpressionType.getId();
-//            if (previousId == ExpressionType.VALUE_OPERATOR_EXPRESSION.getId()
-//                    || previousId == ExpressionType.TRI_STATE_OPERATOR_EXPRESSION.getId()
-//                    || previousId == ExpressionType.TRI_MATH_OPERATOR_EXPRESSION.getId()) {
-//                expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
-//            } else {
-//                expressionCreatorItem.possibleExpressionType = checkLastOperator();
-//            }
-//        }
-//
-//        return expressionCreatorItem;
-//    }
-//
-//    private ExpressionType checkLastOperator() {
-//        for (int i = mExpressionCreators.size() - 2; i > 0; i-=2) {
-//            ExpressionCreatorItem expressionCreatorItem = mExpressionCreators.get(i);
-//            int lastOperatorId = expressionCreatorItem.expressionType.getId();
-//            if (lastOperatorId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
-//                return ExpressionType.TRI_MATH_OPERATOR_EXPRESSION;
-//            } else if (lastOperatorId == ExpressionType.LOGIC_EXPRESSION.getId()) {
-//                return ExpressionType.VALUE_OPERATOR_EXPRESSION;
-//            }
-//        }
-//        return ExpressionType.VALUE_OPERATOR_EXPRESSION;
-//    }
+    public ExpressionCreatorItem getNextTypeOfExpression() {
+        ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
+        if (mExpressionCreators.size() < 1) {
+            expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
+        } else {
+            ExpressionCreatorItem previous = mExpressionCreators.get(mExpressionCreators.size() - 1);
+            int previousId = previous.possibleExpressionType.getId();
+            if (previousId == ExpressionType.VALUE_OPERATOR_EXPRESSION.getId()
+                    || previousId == ExpressionType.TRI_STATE_OPERATOR_EXPRESSION.getId()
+                    || previousId == ExpressionType.TRI_MATH_OPERATOR_EXPRESSION.getId()) {
+                expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
+            } else {
+                expressionCreatorItem.possibleExpressionType = checkLastOperator();
+            }
+        }
+
+        return expressionCreatorItem;
+    }
+
+    private ExpressionType checkLastOperator() {
+        for (int i = mExpressionCreators.size() - 2; i > 0; i-=2) {
+            ExpressionCreatorItem expressionCreatorItem = mExpressionCreators.get(i);
+            int lastOperatorId = expressionCreatorItem.expressionType.getId();
+            if (lastOperatorId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
+                return ExpressionType.TRI_MATH_OPERATOR_EXPRESSION;
+            } else if (lastOperatorId == ExpressionType.LOGIC_EXPRESSION.getId()) {
+                return ExpressionType.VALUE_OPERATOR_EXPRESSION;
+            }
+        }
+        return ExpressionType.VALUE_OPERATOR_EXPRESSION;
+    }
 }

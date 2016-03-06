@@ -37,4 +37,6 @@
     <string name="label_math_operator">MATH OPERATOR</string>
     <string name="label_comparison_operator">COMPARISON OPERATOR</string>
     <string name="label_logic_operator">LOGIC OPERATOR</string>
+
+    <string name="label_constant_camelcase">Constant</string>
 </resources>

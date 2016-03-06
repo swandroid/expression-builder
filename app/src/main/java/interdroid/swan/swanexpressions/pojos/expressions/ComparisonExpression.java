@@ -1,11 +1,43 @@
 package interdroid.swan.swanexpressions.pojos.expressions;
 
+import android.os.Parcel;
+
 /**
  * Created by steven on 01/04/15.
  */
-public class ComparisonExpression implements ExpressionInterface{
+public class ComparisonExpression implements ExpressionInterface {
 
     private String operator;
+
+    public ComparisonExpression() {
+
+    }
+
+    protected ComparisonExpression(Parcel in) {
+        operator = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(operator);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ComparisonExpression> CREATOR = new Creator<ComparisonExpression>() {
+        @Override
+        public ComparisonExpression createFromParcel(Parcel in) {
+            return new ComparisonExpression(in);
+        }
+
+        @Override
+        public ComparisonExpression[] newArray(int size) {
+            return new ComparisonExpression[size];
+        }
+    };
 
     @Override
     public String getExpression() {
