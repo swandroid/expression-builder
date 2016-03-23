@@ -9,9 +9,7 @@ import java.util.ArrayList;
 
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
-import interdroid.swan.swanexpressions.pojos.expressions.ConstantExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
-import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
 import interdroid.swan.swanexpressions.views.ExpressionCreatorView;
 
 /**

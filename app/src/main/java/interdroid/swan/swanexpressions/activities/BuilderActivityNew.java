@@ -1,7 +1,5 @@
 package interdroid.swan.swanexpressions.activities;
 
-import com.melnykov.fab.FloatingActionButton;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+
+import com.melnykov.fab.FloatingActionButton;
 
 import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
@@ -24,7 +24,7 @@ public class BuilderActivityNew extends BaseActivity {
 
     private static final String TAG = BuilderActivityNew.class.getSimpleName();
 
-    private static final int EXPRESSION_REQUEST_ID = 1240;
+    public static final int EXPRESSION_REQUEST_ID = 1240;
 
     public static final String KEY_EXTRA_NAME = "Name";
     public static final String KEY_EXTRA_EXPRESSION = "Expression";
@@ -115,5 +115,19 @@ public class BuilderActivityNew extends BaseActivity {
 //        setResult(RESULT_OK, intent);
         finish();
         //Toast.makeText(getApplicationContext(), "Expression: " + expression, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == EXPRESSION_REQUEST_ID) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                ExpressionCreatorItem expressionCreatorItem = data.getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
+                mAdapter.addExpression(expressionCreatorItem);
+            } else {
+
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package interdroid.swan.swanexpressions.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -53,7 +54,8 @@ public class ExpressionSelectionActivity extends BaseActivity {
         if (requestCode == EXPRESSION_REQUEST_ID) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
-
+                setResult(Activity.RESULT_OK, data);
+                finish();
             } else {
 
             }

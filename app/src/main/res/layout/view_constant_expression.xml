@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardElevation="@dimen/item_elevation">
+    app:cardElevation="@dimen/item_elevation"
+    android:layout_marginBottom="@dimen/item_margin_bottom_expression">
 
     <FrameLayout
         android:layout_width="match_parent"

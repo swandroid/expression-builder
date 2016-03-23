@@ -1,8 +1,12 @@
 package interdroid.swan.swanexpressions.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import interdroid.swan.swanexpressions.Constants;
@@ -40,7 +44,12 @@ public class ConstantExpressionCreatorActivity extends BaseActivity {
         mConstantValue = (EditText) findViewById(R.id.constant_creator_value);
         mConstantExpressionView = (ConstantExpressionView) findViewById(R.id.constant_expression_view);
         mConstantValue.addTextChangedListener(mConstantValueTextWatcher);
-        mConstantExpressionView.setExpressionCreatorItem(mExpressionCreatorItem);
+        mConstantExpressionView.setExpressionCreatorItem(mExpressionCreatorItem, null);
+
+        if (mExpressionCreatorItem.expressionInterface != null) {
+            mConstantValue.setText(((ConstantExpression) mExpressionCreatorItem.expressionInterface).getConstant());
+            mConstantValue.setSelection(mConstantValue.getText().length());
+        }
     }
 
     private TextWatcher mConstantValueTextWatcher = new TextWatcher() {
@@ -52,7 +61,7 @@ public class ConstantExpressionCreatorActivity extends BaseActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             ((ConstantExpression) mExpressionCreatorItem.expressionInterface).setConstant(s.toString());
-            mConstantExpressionView.setExpressionCreatorItem(mExpressionCreatorItem);
+            mConstantExpressionView.setExpressionCreatorItem(mExpressionCreatorItem, null);
         }
 
         @Override
@@ -60,4 +69,24 @@ public class ConstantExpressionCreatorActivity extends BaseActivity {
 
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_save, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_save:
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, mExpressionCreatorItem);
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

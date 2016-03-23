@@ -1,6 +1,8 @@
 package interdroid.swan.swanexpressions.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,18 +12,20 @@ import java.util.ArrayList;
 
 import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.activities.BuilderActivityNew;
+import interdroid.swan.swanexpressions.activities.ExpressionSelectionActivity;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.views.ConstantExpressionView;
 
 /**
  * Created by steven on 01/03/15.
  */
-public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<ExpressionCreatorListAdapterNew.SimpleViewHolder> {
-
+public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<ExpressionCreatorListAdapterNew.SimpleViewHolder>
+    implements ConstantExpressionView.OnConstantExpressionClickListener {
 
     private Context mContext;
     private ArrayList<ExpressionCreatorItem> mExpressionCreators;
-    private OnExpressionCreatorClickListener mOnExpressionCreatorClickListener;
 
     public ExpressionCreatorListAdapterNew(Context context) {
         mContext = context;
@@ -30,8 +34,11 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
 //        addExpressionCreator();
     }
 
-    public interface OnExpressionCreatorClickListener {
-        void onExpressionCreatorClicked(ExpressionCreatorItem expression);
+    @Override
+    public void onConstantExpressionClicked(ExpressionCreatorItem expressionCreatorItem) {
+        Intent intent = new Intent(mContext, ExpressionSelectionActivity.class);
+        intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, expressionCreatorItem);
+        ((Activity) mContext).startActivityForResult(intent, BuilderActivityNew.EXPRESSION_REQUEST_ID);
     }
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
@@ -69,6 +76,8 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
         final View view;
         if (viewType == Constants.SENSOR_EXPRESSION) {
             view = LayoutInflater.from(mContext).inflate(R.layout.view_sensor_expression, parent, false);
+        } else if (viewType == Constants.CONSTANT_EXPRESSION){
+            view = LayoutInflater.from(mContext).inflate(R.layout.view_constant_expression, parent, false);;
         } else {
             view = null;
         }
@@ -84,7 +93,13 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         if (holder.getItemViewType() == Constants.SENSOR_EXPRESSION) {
 
-        } else if (holder.getItemViewType() == 2) {
+        } else if (holder.getItemViewType() == Constants.CONSTANT_EXPRESSION) {
+            ((ConstantExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position), this);
+        } else if (holder.getItemViewType() == Constants.MATH_EXPRESSION) {
+
+        } else if (holder.getItemViewType() == Constants.COMPARISON_EXPRESSION) {
+
+        } else if (holder.getItemViewType() == Constants.LOGIC_EXPRESSION) {
 
         }
     }
@@ -102,6 +117,12 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
     public void setExpressions(ArrayList<ExpressionCreatorItem> expressions) {
         mExpressionCreators = expressions;
         notifyDataSetChanged();
+    }
+
+    public void addExpression(ExpressionCreatorItem expressionCreatorItem) {
+        mExpressionCreators.add(expressionCreatorItem);
+        notifyDataSetChanged();
+//        notifyItemInserted(mExpressionCreators.size() - 1);
     }
 
     public void addExpressionCreator() {

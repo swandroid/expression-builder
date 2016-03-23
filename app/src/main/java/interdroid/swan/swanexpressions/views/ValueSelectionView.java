@@ -16,6 +16,7 @@ import interdroid.swan.swanexpressions.activities.ExpressionSelectionActivity;
 import interdroid.swan.swanexpressions.activities.SensorExpressionCreatorActivity;
 import interdroid.swan.swanexpressions.pojos.expressions.ConstantExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
 
 /**
  * Created by steven on 27/01/16.
@@ -65,6 +66,10 @@ public class ValueSelectionView extends LinearLayout {
 
         @Override
         public void onClick(View v) {
+            if (mExpressionCreatorItem.expressionInterface == null) {
+                mExpressionCreatorItem.expressionTypeInt = Constants.SENSOR_EXPRESSION;
+                mExpressionCreatorItem.expressionInterface = new SensorExpression();
+            }
             Intent intent = new Intent(getContext(), SensorExpressionCreatorActivity.class);
             intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, mExpressionCreatorItem);
             ((Activity) getContext()).startActivityForResult(intent, ExpressionSelectionActivity.EXPRESSION_REQUEST_ID);
@@ -76,6 +81,7 @@ public class ValueSelectionView extends LinearLayout {
         @Override
         public void onClick(View v) {
             if (mExpressionCreatorItem.expressionInterface == null) {
+                mExpressionCreatorItem.expressionTypeInt = Constants.CONSTANT_EXPRESSION;
                 mExpressionCreatorItem.expressionInterface = new ConstantExpression();
             }
             Intent intent = new Intent(getContext(), ConstantExpressionCreatorActivity.class);

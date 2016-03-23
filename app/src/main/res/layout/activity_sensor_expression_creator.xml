@@ -9,4 +9,5 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <!-- TODO: look at page from college blok -->
 </LinearLayout>
