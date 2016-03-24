@@ -14,15 +14,15 @@ import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.activities.BuilderActivityNew;
 import interdroid.swan.swanexpressions.activities.ExpressionSelectionActivity;
-import interdroid.swan.swanexpressions.enums.ExpressionType;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 import interdroid.swan.swanexpressions.views.ConstantExpressionView;
+import interdroid.swan.swanexpressions.views.OperatorExpressionView;
 
 /**
  * Created by steven on 01/03/15.
  */
 public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<ExpressionCreatorListAdapterNew.SimpleViewHolder>
-    implements ConstantExpressionView.OnConstantExpressionClickListener {
+    implements ConstantExpressionView.OnConstantExpressionClickListener, OperatorExpressionView.OnOperatorExpressionClickListener {
 
     private Context mContext;
     private ArrayList<ExpressionCreatorItem> mExpressionCreators;
@@ -32,13 +32,6 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
         mExpressionCreators = new ArrayList<ExpressionCreatorItem>();
         //mOnExpressionCreatorClickListener = onClickListener;
 //        addExpressionCreator();
-    }
-
-    @Override
-    public void onConstantExpressionClicked(ExpressionCreatorItem expressionCreatorItem) {
-        Intent intent = new Intent(mContext, ExpressionSelectionActivity.class);
-        intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, expressionCreatorItem);
-        ((Activity) mContext).startActivityForResult(intent, BuilderActivityNew.EXPRESSION_REQUEST_ID);
     }
 
     public static class SimpleViewHolder extends RecyclerView.ViewHolder {
@@ -78,6 +71,10 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
             view = LayoutInflater.from(mContext).inflate(R.layout.view_sensor_expression, parent, false);
         } else if (viewType == Constants.CONSTANT_EXPRESSION){
             view = LayoutInflater.from(mContext).inflate(R.layout.view_constant_expression, parent, false);;
+        } else if (viewType == Constants.MATH_EXPRESSION){
+            view = LayoutInflater.from(mContext).inflate(R.layout.view_operator_expression, parent, false);;
+        } else if (viewType == Constants.COMPARISON_EXPRESSION){
+            view = LayoutInflater.from(mContext).inflate(R.layout.view_operator_expression, parent, false);;
         } else {
             view = null;
         }
@@ -96,9 +93,9 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
         } else if (holder.getItemViewType() == Constants.CONSTANT_EXPRESSION) {
             ((ConstantExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position), this);
         } else if (holder.getItemViewType() == Constants.MATH_EXPRESSION) {
-
+            ((OperatorExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position), this);
         } else if (holder.getItemViewType() == Constants.COMPARISON_EXPRESSION) {
-
+            ((OperatorExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position), this);
         } else if (holder.getItemViewType() == Constants.LOGIC_EXPRESSION) {
 
         }
@@ -123,6 +120,11 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
         mExpressionCreators.add(expressionCreatorItem);
         notifyDataSetChanged();
 //        notifyItemInserted(mExpressionCreators.size() - 1);
+    }
+
+    public void updateExpression(ExpressionCreatorItem expressionCreatorItem, int position) {
+        mExpressionCreators.set(position, expressionCreatorItem);
+        notifyItemChanged(position);
     }
 
     public void addExpressionCreator() {
@@ -174,36 +176,53 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
 //        }
 //        return sb.toString();
 //    }
-//
+
     public ExpressionCreatorItem getNextTypeOfExpression() {
         ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
         if (mExpressionCreators.size() < 1) {
-            expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
+            expressionCreatorItem.possibleExpressionTypeInt = Constants.VALUE_EXPRESSION;
         } else {
             ExpressionCreatorItem previous = mExpressionCreators.get(mExpressionCreators.size() - 1);
-            int previousId = previous.possibleExpressionType.getId();
-            if (previousId == ExpressionType.VALUE_OPERATOR_EXPRESSION.getId()
-                    || previousId == ExpressionType.TRI_STATE_OPERATOR_EXPRESSION.getId()
-                    || previousId == ExpressionType.TRI_MATH_OPERATOR_EXPRESSION.getId()) {
-                expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
+            int previousId = previous.possibleExpressionTypeInt;
+            if (previousId == Constants.VALUE_OPERATOR_EXPRESSION
+                    || previousId == Constants.TRI_STATE_OPERATOR_EXPRESSION
+                    || previousId == Constants.TRI_MATH_OPERATOR_EXPRESSION) {
+                expressionCreatorItem.possibleExpressionTypeInt = Constants.VALUE_EXPRESSION;
             } else {
-                expressionCreatorItem.possibleExpressionType = checkLastOperator();
+                expressionCreatorItem.possibleExpressionTypeInt = checkLastOperator();
             }
         }
 
         return expressionCreatorItem;
     }
 
-    private ExpressionType checkLastOperator() {
+    private int checkLastOperator() {
         for (int i = mExpressionCreators.size() - 2; i > 0; i-=2) {
             ExpressionCreatorItem expressionCreatorItem = mExpressionCreators.get(i);
-            int lastOperatorId = expressionCreatorItem.expressionType.getId();
-            if (lastOperatorId == ExpressionType.COMPARISON_EXPRESSION.getId()) {
-                return ExpressionType.TRI_MATH_OPERATOR_EXPRESSION;
-            } else if (lastOperatorId == ExpressionType.LOGIC_EXPRESSION.getId()) {
-                return ExpressionType.VALUE_OPERATOR_EXPRESSION;
+            int lastOperatorId = expressionCreatorItem.expressionTypeInt;
+            if (lastOperatorId == Constants.COMPARISON_EXPRESSION) {
+                return Constants.TRI_MATH_OPERATOR_EXPRESSION;
+            } else if (lastOperatorId == Constants.LOGIC_EXPRESSION) {
+                return Constants.VALUE_OPERATOR_EXPRESSION;
             }
         }
-        return ExpressionType.VALUE_OPERATOR_EXPRESSION;
+        return Constants.VALUE_OPERATOR_EXPRESSION;
+    }
+
+    @Override
+    public void onConstantExpressionClicked(ExpressionCreatorItem expressionCreatorItem) {
+        startExpresionSelectionActivity(expressionCreatorItem);
+    }
+
+    @Override
+    public void onOperatorExpressionClicked(ExpressionCreatorItem expressionCreatorItem) {
+        startExpresionSelectionActivity(expressionCreatorItem);
+    }
+
+    private void startExpresionSelectionActivity(ExpressionCreatorItem expressionCreatorItem) {
+        Intent intent = new Intent(mContext, ExpressionSelectionActivity.class);
+        intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, expressionCreatorItem);
+        intent.putExtra(Constants.EXTRA_EXPRESSION_LIST_POSITION, mExpressionCreators.indexOf(expressionCreatorItem));
+        ((Activity) mContext).startActivityForResult(intent, BuilderActivityNew.EXPRESSION_REQUEST_ID);
     }
 }

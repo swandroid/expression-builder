@@ -39,4 +39,21 @@
     <string name="label_logic_operator">LOGIC OPERATOR</string>
 
     <string name="label_constant_camelcase">Constant</string>
+
+    <string name="math_operator_plus">+</string>
+    <string name="math_operator_minus">-</string>
+    <string name="math_operator_times">*</string>
+    <string name="math_operator_divide">-</string>
+    <string name="math_operator_modulo">%</string>
+
+
+    <string name="comparison_operator_equals">==</string>
+    <string name="comparison_operator_greater_equals">&gt;=</string>
+    <string name="comparison_operator_less_equals">&lt;=</string>
+    <string name="comparison_operator_greater">&gt;</string>
+    <string name="comparison_operator_less">&lt;</string>
+    <string name="comparison_operator_not_equals">!=</string>
+    <!--<string name="comparison_operator_regex">!=</string>-->
+    <string name="comparison_operator_contains">contains</string>
+
 </resources>

@@ -13,6 +13,10 @@ public class MathExpression implements ExpressionInterface {
 
     }
 
+    public MathExpression(String operator) {
+        this.operator = operator;
+    }
+
     protected MathExpression(Parcel in) {
         operator = in.readString();
     }

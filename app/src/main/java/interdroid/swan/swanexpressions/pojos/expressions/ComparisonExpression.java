@@ -13,6 +13,10 @@ public class ComparisonExpression implements ExpressionInterface {
 
     }
 
+    public ComparisonExpression(String operator) {
+        this.operator = operator;
+    }
+
     protected ComparisonExpression(Parcel in) {
         operator = in.readString();
     }

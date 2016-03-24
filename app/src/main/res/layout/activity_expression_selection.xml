@@ -16,6 +16,10 @@
             android:id="@+id/expression_selection_value"
             android:visibility="gone"/>
 
+        <include layout="@layout/view_selection_value_operator_expression"
+            android:id="@+id/expression_selection_value_operator"
+            android:visibility="gone"/>
+
     </FrameLayout>
 
 </LinearLayout>

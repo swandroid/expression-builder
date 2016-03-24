@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
+import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.enums.ExpressionType;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
@@ -92,14 +93,14 @@ public class ExpressionCreatorListAdapter extends RecyclerView.Adapter<Expressio
         boolean[] shouldAddQuotes = new boolean[mExpressionCreators.size()];
         for (int i = 0; i < mExpressionCreators.size(); i++) {
             ExpressionCreatorItem expressionCreatorItem = mExpressionCreators.get(i);
-            if (expressionCreatorItem.expressionType == ExpressionType.COMPARISON_EXPRESSION
+            if (expressionCreatorItem.expressionTypeInt == Constants.COMPARISON_EXPRESSION
                     && (expressionCreatorItem.expressionInterface.getExpression().equals("contains")
                     || expressionCreatorItem.expressionInterface.getExpression().equals("regex"))) {
                 //TODO: errorChecking
-                if (mExpressionCreators.get(i-1).expressionType == ExpressionType.CONSTANT_EXPRESSION) {
+                if (mExpressionCreators.get(i-1).expressionTypeInt == Constants.CONSTANT_EXPRESSION) {
                     shouldAddQuotes[i-1] = true;
                 }
-                if (mExpressionCreators.get(i+1).expressionType == ExpressionType.CONSTANT_EXPRESSION) {
+                if (mExpressionCreators.get(i+1).expressionTypeInt == Constants.CONSTANT_EXPRESSION) {
                     shouldAddQuotes[i+1] = true;
                 }
             }
@@ -121,7 +122,7 @@ public class ExpressionCreatorListAdapter extends RecyclerView.Adapter<Expressio
         return sb.toString();
     }
 
-    private ExpressionCreatorItem getNextTypeOfExpression() {
+    public ExpressionCreatorItem getNextTypeOfExpression() {
         ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
         if (mExpressionCreators.size() < 1) {
             expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;

@@ -81,8 +81,7 @@ public class BuilderActivityNew extends BaseActivity {
     };
 
     private void addExpressionCreator() {
-        //TODO: create correct ExpressionCreatorItem
-        ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
+        ExpressionCreatorItem expressionCreatorItem = mAdapter.getNextTypeOfExpression();
         Intent intent = new Intent(BuilderActivityNew.this, ExpressionSelectionActivity.class);
         intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, expressionCreatorItem);
         startActivityForResult(intent, EXPRESSION_REQUEST_ID);
@@ -124,7 +123,12 @@ public class BuilderActivityNew extends BaseActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 ExpressionCreatorItem expressionCreatorItem = data.getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
-                mAdapter.addExpression(expressionCreatorItem);
+                int position = data.getIntExtra(Constants.EXTRA_EXPRESSION_LIST_POSITION, -1);
+                if (position >= 0) {
+                    mAdapter.updateExpression(expressionCreatorItem, position);
+                } else {
+                    mAdapter.addExpression(expressionCreatorItem);
+                }
             } else {
 
             }
