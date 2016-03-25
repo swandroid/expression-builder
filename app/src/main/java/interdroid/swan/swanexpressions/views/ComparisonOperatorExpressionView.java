@@ -12,22 +12,22 @@ import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 /**
  * Created by steven on 27/01/16.
  */
-public class OperatorExpressionView extends FrameLayout implements View.OnClickListener {
+public class ComparisonOperatorExpressionView extends FrameLayout implements View.OnClickListener {
 
     private TextView mOperatorValue;
 
     private ExpressionCreatorItem mExpressionCreatorItem;
-    private OnOperatorExpressionClickListener mListener;
+    private OnComparisonOperatorExpressionClickListener mListener;
 
-    public OperatorExpressionView(Context context) {
+    public ComparisonOperatorExpressionView(Context context) {
         super(context);
     }
 
-    public OperatorExpressionView(Context context, AttributeSet attrs) {
+    public ComparisonOperatorExpressionView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public OperatorExpressionView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ComparisonOperatorExpressionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -43,7 +43,7 @@ public class OperatorExpressionView extends FrameLayout implements View.OnClickL
     }
 
     public void setExpressionCreatorItem(ExpressionCreatorItem expressionCreatorItem,
-                                         OnOperatorExpressionClickListener listener) {
+                                         OnComparisonOperatorExpressionClickListener listener) {
         mExpressionCreatorItem = expressionCreatorItem;
         mListener = listener;
         mOperatorValue.setText(expressionCreatorItem.expressionInterface.getExpression());
@@ -53,12 +53,12 @@ public class OperatorExpressionView extends FrameLayout implements View.OnClickL
     public void onClick(View v) {
         if (v == this) {
             if (mListener != null) {
-                mListener.onOperatorExpressionClicked(mExpressionCreatorItem);
+                mListener.onComparisonOperatorExpressionClicked(mExpressionCreatorItem);
             }
         }
     }
 
-    public interface OnOperatorExpressionClickListener {
-        void onOperatorExpressionClicked(ExpressionCreatorItem expressionCreatorItem);
+    public interface OnComparisonOperatorExpressionClickListener {
+        void onComparisonOperatorExpressionClicked(ExpressionCreatorItem expressionCreatorItem);
     }
 }

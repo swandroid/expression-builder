@@ -8,6 +8,7 @@ import android.view.View;
 import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.views.TriMathOperatorSelectionView;
 import interdroid.swan.swanexpressions.views.ValueOperatorSelectionView;
 import interdroid.swan.swanexpressions.views.ValueSelectionView;
 
@@ -15,12 +16,14 @@ import interdroid.swan.swanexpressions.views.ValueSelectionView;
  * Created by steven on 27/01/16.
  */
 public class ExpressionSelectionActivity extends BaseActivity
-        implements ValueOperatorSelectionView.OnOperatorClickListener {
+        implements ValueOperatorSelectionView.OnOperatorClickListener,
+        TriMathOperatorSelectionView.OnOperatorClickListener {
 
     public static final int EXPRESSION_REQUEST_ID = 1241;
 
     private ValueSelectionView mValueSelectionView;
     private ValueOperatorSelectionView mValueOperatorSelectionView;
+    private TriMathOperatorSelectionView mTriMathOperatorSelectionView;
 
     private ExpressionCreatorItem mExpressionCreatorItem;
     private int mPosition;
@@ -44,6 +47,7 @@ public class ExpressionSelectionActivity extends BaseActivity
     private void getViews() {
         mValueSelectionView = (ValueSelectionView) findViewById(R.id.expression_selection_value);
         mValueOperatorSelectionView = (ValueOperatorSelectionView) findViewById(R.id.expression_selection_value_operator);
+        mTriMathOperatorSelectionView = (TriMathOperatorSelectionView) findViewById(R.id.expression_selection_tri_math_operator);
         ExpressionCreatorItem expressionCreatorItem = getIntent().getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
         switch (mExpressionCreatorItem.possibleExpressionTypeInt) {
             case Constants.VALUE_EXPRESSION:
@@ -53,6 +57,10 @@ public class ExpressionSelectionActivity extends BaseActivity
             case Constants.VALUE_OPERATOR_EXPRESSION:
                 mValueOperatorSelectionView.setVisibility(View.VISIBLE);
                 mValueOperatorSelectionView.setExpressionCreatorItem(expressionCreatorItem, this);
+                break;
+            case Constants.TRI_MATH_OPERATOR_EXPRESSION:
+                mTriMathOperatorSelectionView.setVisibility(View.VISIBLE);
+                mTriMathOperatorSelectionView.setExpressionCreatorItem(expressionCreatorItem, this);
                 break;
             default:
                 break;

@@ -49,6 +49,16 @@ public class MathExpression implements ExpressionInterface {
     }
 
     @Override
+    public void setName(String name) {
+
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    @Override
     public void parsePartOfExpression(String partOfExpression) {
         //TODO: for future expression to expression building blocks
     }

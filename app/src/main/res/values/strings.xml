@@ -56,4 +56,10 @@
     <!--<string name="comparison_operator_regex">!=</string>-->
     <string name="comparison_operator_contains">contains</string>
 
+    <string name="tri_operator_and">AND</string>
+    <string name="tri_operator_or">OR</string>
+
+    <string name="tri_operator_and_value">&amp;&amp;</string>
+    <string name="tri_operator_or_value">||</string>
+
 </resources>

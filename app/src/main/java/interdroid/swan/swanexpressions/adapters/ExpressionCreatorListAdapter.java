@@ -130,7 +130,7 @@ public class ExpressionCreatorListAdapter extends RecyclerView.Adapter<Expressio
             ExpressionCreatorItem previous = mExpressionCreators.get(mExpressionCreators.size() - 1);
             int previousId = previous.possibleExpressionType.getId();
             if (previousId == ExpressionType.VALUE_OPERATOR_EXPRESSION.getId()
-                    || previousId == ExpressionType.TRI_STATE_OPERATOR_EXPRESSION.getId()
+//                    || previousId == ExpressionType.TRI_STATE_OPERATOR_EXPRESSION.getId()
                     || previousId == ExpressionType.TRI_MATH_OPERATOR_EXPRESSION.getId()) {
                 expressionCreatorItem.possibleExpressionType = ExpressionType.VALUE_EXPRESSION;
             } else {

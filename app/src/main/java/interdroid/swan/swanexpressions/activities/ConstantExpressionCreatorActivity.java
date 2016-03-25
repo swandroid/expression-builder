@@ -46,7 +46,7 @@ public class ConstantExpressionCreatorActivity extends BaseActivity {
         mConstantValue.addTextChangedListener(mConstantValueTextWatcher);
         mConstantExpressionView.setExpressionCreatorItem(mExpressionCreatorItem, null);
 
-        if (mExpressionCreatorItem.expressionInterface != null) {
+        if (mExpressionCreatorItem.expressionInterface != null) { //TODO: also add check for instance of
             mConstantValue.setText(((ConstantExpression) mExpressionCreatorItem.expressionInterface).getConstant());
             mConstantValue.setSelection(mConstantValue.getText().length());
         }

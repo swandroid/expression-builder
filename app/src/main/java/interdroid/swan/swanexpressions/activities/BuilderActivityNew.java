@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +24,7 @@ public class BuilderActivityNew extends BaseActivity {
     private static final String TAG = BuilderActivityNew.class.getSimpleName();
 
     public static final int EXPRESSION_REQUEST_ID = 1240;
+    public static final int SUB_EXPRESSION_REQUEST_ID = 1241;
 
     public static final String KEY_EXTRA_NAME = "Name";
     public static final String KEY_EXTRA_EXPRESSION = "Expression";
@@ -36,20 +36,13 @@ public class BuilderActivityNew extends BaseActivity {
     private ExpressionCreatorListAdapterNew mAdapter;
 
     private FloatingActionButton mAddButton;
-    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        getSupportActionBar().setIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-//        setContentView(R.layout.activity_builder);
         setActionBarIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-//        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-//        if (mToolbar != null) {
-//            setSupportActionBar(mToolbar);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        }
         getViews();
+        getData();
     }
 
     @Override
@@ -70,6 +63,13 @@ public class BuilderActivityNew extends BaseActivity {
         mAddButton = (FloatingActionButton) findViewById(R.id.fab);
         mAddButton.setOnClickListener(mOnAddClickListener);
         //mAddButton.attachToRecyclerView(mRecyclerView);
+    }
+
+    private void getData() {
+        if (getIntent().hasExtra(Constants.EXTRA_EXPRESSION_CREATOR)) {
+            ExpressionCreatorItem expressionCreatorItem = getIntent().getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
+            mAdapter.addExpression(expressionCreatorItem);
+        }
     }
 
     private View.OnClickListener mOnAddClickListener = new View.OnClickListener() {
@@ -105,13 +105,15 @@ public class BuilderActivityNew extends BaseActivity {
     }
 
     private void buildExpression() {
+        ExpressionCreatorItem expressionCreatorItem = mAdapter.getExpressionCreatorItem();
+        expressionCreatorItem.expressionInterface.setName(mName.getText().toString());
 //        String name = mName.getText().toString();
 //        String expression = mAdapter.buildExpression();
-//        Intent intent = new Intent();
+        Intent intent = new Intent();
 //        Log.d(TAG, name);
 //        intent.putExtra(KEY_EXTRA_NAME, name);
-//        intent.putExtra(KEY_EXTRA_EXPRESSION, expression);
-//        setResult(RESULT_OK, intent);
+        intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, expressionCreatorItem);
+        setResult(RESULT_OK, intent);
         finish();
         //Toast.makeText(getApplicationContext(), "Expression: " + expression, Toast.LENGTH_LONG).show();
     }

@@ -12,22 +12,22 @@ import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 /**
  * Created by steven on 27/01/16.
  */
-public class ConstantExpressionView extends FrameLayout implements View.OnClickListener {
+public class LogicOperatorExpressionView extends FrameLayout implements View.OnClickListener {
 
-    private TextView mConstantValue;
+    private TextView mOperatorValue;
 
     private ExpressionCreatorItem mExpressionCreatorItem;
-    private OnConstantExpressionClickListener mListener;
+    private OnLogicOperatorExpressionClickListener mListener;
 
-    public ConstantExpressionView(Context context) {
+    public LogicOperatorExpressionView(Context context) {
         super(context);
     }
 
-    public ConstantExpressionView(Context context, AttributeSet attrs) {
+    public LogicOperatorExpressionView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ConstantExpressionView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LogicOperatorExpressionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -38,26 +38,27 @@ public class ConstantExpressionView extends FrameLayout implements View.OnClickL
     }
 
     private void getViews() {
-        mConstantValue = (TextView) findViewById(R.id.constant_value);
+        this.setOnClickListener(this);
+        mOperatorValue = (TextView) findViewById(R.id.operator_value);
     }
 
     public void setExpressionCreatorItem(ExpressionCreatorItem expressionCreatorItem,
-                                         OnConstantExpressionClickListener listener) {
+                                         OnLogicOperatorExpressionClickListener listener) {
         mExpressionCreatorItem = expressionCreatorItem;
         mListener = listener;
-        mConstantValue.setText(expressionCreatorItem.expressionInterface.getExpression());
+        mOperatorValue.setText(expressionCreatorItem.expressionInterface.getExpression());
     }
 
     @Override
     public void onClick(View v) {
         if (v == this) {
             if (mListener != null) {
-                mListener.onConstantExpressionClicked(mExpressionCreatorItem);
+                mListener.onLogicOperatorExpressionClicked(mExpressionCreatorItem);
             }
         }
     }
 
-    public interface OnConstantExpressionClickListener {
-        void onConstantExpressionClicked(ExpressionCreatorItem expressionCreatorItem);
+    public interface OnLogicOperatorExpressionClickListener {
+        void onLogicOperatorExpressionClicked(ExpressionCreatorItem expressionCreatorItem);
     }
 }

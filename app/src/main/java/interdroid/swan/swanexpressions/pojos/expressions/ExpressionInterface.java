@@ -7,7 +7,11 @@ import android.os.Parcelable;
  */
 public interface ExpressionInterface extends Parcelable {
 
-    public String getExpression();
+    String getExpression();
 
-    public void parsePartOfExpression(String partOfExpression);
+    void setName(String name);
+
+    String getName();
+
+    void parsePartOfExpression(String partOfExpression);
 }
