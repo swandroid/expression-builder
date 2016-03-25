@@ -12,8 +12,9 @@ public class Constants {
     public static final int LOGIC_EXPRESSION = 4;
     public static final int VALUE_EXPRESSION = 5;
     public static final int VALUE_OPERATOR_EXPRESSION = 6;
-    public static final int TRI_STATE_EXPRESSION = 7;
-    public static final int TRI_MATH_OPERATOR_EXPRESSION = 7;
+    public static final int COMPARISON_VALUE_EXPRESSION = 7;
+    public static final int TRI_MATH_OPERATOR_EXPRESSION = 8;
+    public static final int TRI_VALUE_EXPRESSION = 9;
 
 //    public static final int MATH_VALUE_EXPRESSION = 8;
 

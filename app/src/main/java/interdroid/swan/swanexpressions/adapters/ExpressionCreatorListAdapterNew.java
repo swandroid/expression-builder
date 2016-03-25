@@ -16,10 +16,14 @@ import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.activities.BuilderActivityNew;
 import interdroid.swan.swanexpressions.activities.ExpressionSelectionActivity;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.expressions.ComparisonValueExpression;
+import interdroid.swan.swanexpressions.pojos.expressions.ExpressionListInterface;
+import interdroid.swan.swanexpressions.pojos.expressions.TriValueExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ValueExpression;
 import interdroid.swan.swanexpressions.views.ComparisonOperatorExpressionView;
 import interdroid.swan.swanexpressions.views.ConstantExpressionView;
 import interdroid.swan.swanexpressions.views.LogicOperatorExpressionView;
+import interdroid.swan.swanexpressions.views.ComparisonValueExpressionView;
 import interdroid.swan.swanexpressions.views.MathOperatorExpressionView;
 import interdroid.swan.swanexpressions.views.TriValueExpressionView;
 import interdroid.swan.swanexpressions.views.ValueExpressionView;
@@ -88,7 +92,9 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
             view = LayoutInflater.from(mContext).inflate(R.layout.view_logic_operator_expression, parent, false);
         } else if (viewType == Constants.VALUE_EXPRESSION){
             view = LayoutInflater.from(mContext).inflate(R.layout.view_value_expression, parent, false);
-        } else if (viewType == Constants.TRI_STATE_EXPRESSION){
+        } else if (viewType == Constants.COMPARISON_VALUE_EXPRESSION){
+            view = LayoutInflater.from(mContext).inflate(R.layout.view_comparison_value_expression, parent, false);
+        } else if (viewType == Constants.TRI_VALUE_EXPRESSION){
             view = LayoutInflater.from(mContext).inflate(R.layout.view_tri_value_expression, parent, false);
         } else {
             view = null;
@@ -115,7 +121,9 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
             ((LogicOperatorExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position), this);
         } else if (holder.getItemViewType() == Constants.VALUE_EXPRESSION) {
             ((ValueExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position));
-        } else if (holder.getItemViewType() == Constants.TRI_STATE_EXPRESSION) {
+        } else if (holder.getItemViewType() == Constants.COMPARISON_VALUE_EXPRESSION) {
+            ((ComparisonValueExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position));
+        } else if (holder.getItemViewType() == Constants.TRI_VALUE_EXPRESSION) {
             ((TriValueExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position));
         }
     }
@@ -149,15 +157,16 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
         notifyItemChanged(position);
     }
 
-    private void expandExpressions() { //TODO: maybe expand for all
+    private void expandExpressions() {
         int size = mExpressionCreators.size();
         boolean itemCollapsed = false;
         for (int j = size; j > 0; j--) {
             ExpressionCreatorItem lastExpressionCreatorItem = mExpressionCreators.get(j - 1);
             if (lastExpressionCreatorItem.expressionTypeInt == Constants.VALUE_EXPRESSION
-                    || lastExpressionCreatorItem.expressionTypeInt == Constants.TRI_STATE_EXPRESSION) {
+                    || lastExpressionCreatorItem.expressionTypeInt == Constants.COMPARISON_VALUE_EXPRESSION
+                    || lastExpressionCreatorItem.expressionTypeInt == Constants.TRI_VALUE_EXPRESSION) {
                 itemCollapsed = true;
-                List<ExpressionCreatorItem> items = ((ValueExpression) lastExpressionCreatorItem.expressionInterface).getExpressionCreatorItems();
+                List<ExpressionCreatorItem> items = ((ExpressionListInterface) lastExpressionCreatorItem.expressionInterface).getExpressionCreatorItems();
                 mExpressionCreators.remove(j - 1);
                 for (int i = items.size() - 1; i >= 0; i--) {
                     mExpressionCreators.add(j - 1, items.get(i));
@@ -194,6 +203,7 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
 
     private void checkIfExpressionsCanBeCollapsed() {
         checkIfValueExpressionsCanBeCollapsed();
+        checkIfLogicValueExpressionCanBeCollapsed();
         checkIfTriValueExpressionCanBeCollapsed();
     }
 
@@ -249,7 +259,7 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
         checkIfValueExpressionsCanBeCollapsed();
     }
 
-    private void checkIfTriValueExpressionCanBeCollapsed() {
+    private void checkIfLogicValueExpressionCanBeCollapsed() {
         if (mExpressionCreators.size() < 3) {
             return;
         }
@@ -257,7 +267,7 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
         int beginIndex = -1;
         int endIndex = -1;
         int currentType = -1;
-        boolean foundTriValueExpression = false;
+        boolean foundComparisonValueExpression = false;
         for (int i = 0; i < mExpressionCreators.size(); i++) {
             int type = mExpressionCreators.get(i).expressionTypeInt;
             if (type == Constants.CONSTANT_EXPRESSION
@@ -269,8 +279,8 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
                         beginIndex = i;
                     }
                     endIndex = i;
-                    if (currentType == Constants.TRI_STATE_EXPRESSION) {
-                        foundTriValueExpression = true;
+                    if (currentType == Constants.COMPARISON_VALUE_EXPRESSION) {
+                        foundComparisonValueExpression = true;
                     }
                 } else {
                     return;
@@ -280,15 +290,66 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
                         || lastView == Constants.SENSOR_EXPRESSION
                         || lastView == Constants.VALUE_EXPRESSION) {
                     lastView = mExpressionCreators.get(i).expressionTypeInt;
-                    currentType = Constants.TRI_STATE_EXPRESSION;
+                    currentType = Constants.COMPARISON_VALUE_EXPRESSION;
                 } else {
                     return;
                 }
-            } else if (type == Constants.TRI_STATE_EXPRESSION) { //Everything below can be combined
+            } else if (type == Constants.COMPARISON_VALUE_EXPRESSION) { //Everything below can be combined
                 //Just Skip
             } else if (type == Constants.LOGIC_EXPRESSION) {
-                if (currentType == Constants.TRI_STATE_EXPRESSION) {
+                if (currentType == Constants.COMPARISON_VALUE_EXPRESSION) {
                     break;
+                }
+            } else {
+                break;
+            }
+        }
+        if (!foundComparisonValueExpression) {
+            return;
+        }
+        List<ExpressionCreatorItem> creatorItemsToCollapse = new ArrayList<>(endIndex - beginIndex + 1);
+        for (int i = endIndex; i >= beginIndex; i--) {
+            creatorItemsToCollapse.add(0, mExpressionCreators.get(i));
+            mExpressionCreators.remove(i);
+        }
+        ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
+        expressionCreatorItem.expressionTypeInt = Constants.COMPARISON_VALUE_EXPRESSION;
+        expressionCreatorItem.expressionInterface = new ComparisonValueExpression(creatorItemsToCollapse);
+        //TODO: add possible Expression Type
+        mExpressionCreators.add(beginIndex, expressionCreatorItem);
+        checkIfLogicValueExpressionCanBeCollapsed();
+    }
+
+    private void checkIfTriValueExpressionCanBeCollapsed() {
+        if (mExpressionCreators.size() < 3) {
+            return;
+        }
+        int lastView = -1;
+        int beginIndex = -1;
+        int endIndex = -1;
+        int currentType = -1;
+        boolean foundTriValueExpression = false;
+        for (int i = 0; i < mExpressionCreators.size(); i++) {
+            int type = mExpressionCreators.get(i).expressionTypeInt;
+            if (type == Constants.COMPARISON_VALUE_EXPRESSION) {
+                if (lastView == -1 || lastView == Constants.LOGIC_EXPRESSION) {
+                    lastView = mExpressionCreators.get(i).expressionTypeInt;
+                    if (beginIndex < 0) {
+                        beginIndex = i;
+                    }
+                    endIndex = i;
+                    if (currentType == Constants.TRI_VALUE_EXPRESSION) {
+                        foundTriValueExpression = true;
+                    }
+                } else {
+                    return;
+                }
+            } else if (type == Constants.LOGIC_EXPRESSION) {
+                if (lastView == Constants.COMPARISON_VALUE_EXPRESSION) {
+                    lastView = mExpressionCreators.get(i).expressionTypeInt;
+                    currentType = Constants.TRI_VALUE_EXPRESSION;
+                } else {
+                    return;
                 }
             } else {
                 break;
@@ -303,11 +364,11 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
             mExpressionCreators.remove(i);
         }
         ExpressionCreatorItem expressionCreatorItem = new ExpressionCreatorItem();
-        expressionCreatorItem.expressionTypeInt = Constants.TRI_STATE_EXPRESSION;
-        expressionCreatorItem.expressionInterface = new ValueExpression(creatorItemsToCollapse);
+        expressionCreatorItem.expressionTypeInt = Constants.TRI_VALUE_EXPRESSION;
+        expressionCreatorItem.expressionInterface = new TriValueExpression(creatorItemsToCollapse);
         //TODO: add possible Expression Type
         mExpressionCreators.add(beginIndex, expressionCreatorItem);
-        checkIfTriValueExpressionCanBeCollapsed();
+        //checkIfTriValueExpressionCanBeCollapsed();
     }
 
     public void addExpressionCreator() {
@@ -366,7 +427,8 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
             expressionCreatorItem.possibleExpressionTypeInt = Constants.VALUE_EXPRESSION;
         } else if (mExpressionCreators.get(mExpressionCreators.size() - 1).expressionTypeInt == Constants.VALUE_EXPRESSION) {
             expressionCreatorItem.possibleExpressionTypeInt = Constants.VALUE_OPERATOR_EXPRESSION;
-        } else if (mExpressionCreators.get(mExpressionCreators.size() - 1).expressionTypeInt == Constants.TRI_STATE_EXPRESSION) {
+        } else if (mExpressionCreators.get(mExpressionCreators.size() - 1).expressionTypeInt == Constants.COMPARISON_VALUE_EXPRESSION
+                || mExpressionCreators.get(mExpressionCreators.size() - 1).expressionTypeInt == Constants.TRI_VALUE_EXPRESSION) {
             expressionCreatorItem.possibleExpressionTypeInt = Constants.TRI_MATH_OPERATOR_EXPRESSION;
         } else {
             ExpressionCreatorItem previous = mExpressionCreators.get(mExpressionCreators.size() - 1);

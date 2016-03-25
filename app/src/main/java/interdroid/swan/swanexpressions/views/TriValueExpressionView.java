@@ -12,7 +12,7 @@ import java.util.List;
 import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
-import interdroid.swan.swanexpressions.pojos.expressions.ValueExpression;
+import interdroid.swan.swanexpressions.pojos.expressions.TriValueExpression;
 
 /**
  * Created by steven on 27/01/16.
@@ -56,23 +56,14 @@ public class TriValueExpressionView extends FrameLayout {
         mExpressionContainer.removeViews(1, mExpressionContainer.getChildCount() - 1);
         LayoutInflater inflater = LayoutInflater
                 .from(getContext());
-        List<ExpressionCreatorItem> items = ((ValueExpression) mExpressionCreatorItem.expressionInterface).getExpressionCreatorItems();
+        List<ExpressionCreatorItem> items = ((TriValueExpression) mExpressionCreatorItem.expressionInterface).getExpressionCreatorItems();
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).expressionTypeInt == Constants.CONSTANT_EXPRESSION) {
-                ConstantExpressionView view = (ConstantExpressionView) inflater.inflate(R.layout.view_constant_expression, null);
-                view.setExpressionCreatorItem(items.get(i), null);
-                mExpressionContainer.addView(view);
-            } else if (items.get(i).expressionTypeInt == Constants.SENSOR_EXPRESSION) {
-                SensorExpressionView view = (SensorExpressionView) inflater.inflate(R.layout.view_sensor_expression, null);
-//                view.setExpressionCreatorItem(mExpressionCreatorItems.get(i), null);
-                mExpressionContainer.addView(view);
-            } else if (items.get(i).expressionTypeInt == Constants.VALUE_EXPRESSION) {
-                ValueExpressionView view =
-                        (ValueExpressionView) inflater.inflate(R.layout.view_value_expression, null);
+            if (items.get(i).expressionTypeInt == Constants.COMPARISON_VALUE_EXPRESSION) {
+                ComparisonValueExpressionView view = (ComparisonValueExpressionView) inflater.inflate(R.layout.view_comparison_value_expression, null);
                 view.setExpressionCreatorItem(items.get(i));
                 mExpressionContainer.addView(view);
-            } else if (items.get(i).expressionTypeInt == Constants.COMPARISON_EXPRESSION) {
-                ComparisonOperatorExpressionView view = (ComparisonOperatorExpressionView) inflater.inflate(R.layout.view_comparison_operator_expression, null);
+            } else if (items.get(i).expressionTypeInt == Constants.LOGIC_EXPRESSION) {
+                LogicOperatorExpressionView view = (LogicOperatorExpressionView) inflater.inflate(R.layout.view_logic_operator_expression, null);
                 view.setExpressionCreatorItem(items.get(i), null);
                 mExpressionContainer.addView(view);
             }

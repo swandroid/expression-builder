@@ -8,18 +8,26 @@ import android.os.Parcel;
 public class LogicExpression implements ExpressionInterface {
 
     private String operator;
+    private String humanReadableOperator;
 
     public LogicExpression() {
 
     }
 
+    public LogicExpression(String operator, String humanReadableOperator) {
+        this.operator = operator;
+        this.humanReadableOperator = humanReadableOperator;
+    }
+
     protected LogicExpression(Parcel in) {
         operator = in.readString();
+        humanReadableOperator = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(operator);
+        dest.writeString(humanReadableOperator);
     }
 
     @Override
@@ -65,5 +73,13 @@ public class LogicExpression implements ExpressionInterface {
 
     public String getOperator() {
         return operator;
+    }
+
+    public void setHumanReadableOperator(String operator) {
+        humanReadableOperator = operator;
+    }
+
+    public String getHumanReadableOperator() {
+        return humanReadableOperator;
     }
 }

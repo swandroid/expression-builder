@@ -8,20 +8,20 @@ import java.util.List;
 /**
  * Created by steven on 01/04/15.
  */
-public class ValueExpression implements ExpressionListInterface {
+public class ComparisonValueExpression implements ExpressionListInterface {
 
     private List<ExpressionCreatorItem> mItems;
     private String mName;
 
-    public ValueExpression() {
+    public ComparisonValueExpression() {
 
     }
 
-    public ValueExpression(List<ExpressionCreatorItem> items) {
+    public ComparisonValueExpression(List<ExpressionCreatorItem> items) {
         this.mItems = items;
     }
 
-    protected ValueExpression(Parcel in) {
+    protected ComparisonValueExpression(Parcel in) {
         mItems = new ArrayList<>();
         in.readList(mItems, ExpressionCreatorItem.class.getClassLoader());
     }
@@ -36,15 +36,15 @@ public class ValueExpression implements ExpressionListInterface {
         return 0;
     }
 
-    public static final Creator<ValueExpression> CREATOR = new Creator<ValueExpression>() {
+    public static final Creator<ComparisonValueExpression> CREATOR = new Creator<ComparisonValueExpression>() {
         @Override
-        public ValueExpression createFromParcel(Parcel in) {
-            return new ValueExpression(in);
+        public ComparisonValueExpression createFromParcel(Parcel in) {
+            return new ComparisonValueExpression(in);
         }
 
         @Override
-        public ValueExpression[] newArray(int size) {
-            return new ValueExpression[size];
+        public ComparisonValueExpression[] newArray(int size) {
+            return new ComparisonValueExpression[size];
         }
     };
 

@@ -9,8 +9,8 @@ import android.widget.LinearLayout;
 
 import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
-import interdroid.swan.swanexpressions.pojos.expressions.ComparisonExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.expressions.LogicExpression;
 import interdroid.swan.swanexpressions.pojos.expressions.MathExpression;
 
 /**
@@ -94,9 +94,9 @@ public class TriMathOperatorSelectionView extends LinearLayout implements View.O
         } else if (v == mMathModulo) {
             setMathExpression(R.string.math_operator_modulo);
         } else if (v == mTriAnd) {
-            setTriExpression(R.string.tri_operator_and_value);
+            setTriExpression(R.string.tri_operator_and_value, R.string.tri_operator_and);
         } else if (v == mTriOr) {
-            setTriExpression(R.string.tri_operator_or_value);
+            setTriExpression(R.string.tri_operator_or_value, R.string.tri_operator_or);
         }
     }
 
@@ -108,9 +108,10 @@ public class TriMathOperatorSelectionView extends LinearLayout implements View.O
         }
     }
 
-    private void setTriExpression(int operatorResourceId) {
+    private void setTriExpression(int operatorResourceId, int humanReadableOperatorResourceId) {
         mExpressionCreatorItem.expressionTypeInt = Constants.LOGIC_EXPRESSION;
-        mExpressionCreatorItem.expressionInterface = new ComparisonExpression(getContext().getString(operatorResourceId));
+        mExpressionCreatorItem.expressionInterface = new LogicExpression(getContext().getString(operatorResourceId),
+                getContext().getString(humanReadableOperatorResourceId));
         if (mListener != null) {
             mListener.onOperatorClicked(mExpressionCreatorItem);
         }

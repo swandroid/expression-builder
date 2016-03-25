@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.expressions.LogicExpression;
 
 /**
  * Created by steven on 27/01/16.
@@ -46,7 +47,7 @@ public class LogicOperatorExpressionView extends FrameLayout implements View.OnC
                                          OnLogicOperatorExpressionClickListener listener) {
         mExpressionCreatorItem = expressionCreatorItem;
         mListener = listener;
-        mOperatorValue.setText(expressionCreatorItem.expressionInterface.getExpression());
+        mOperatorValue.setText(((LogicExpression)expressionCreatorItem.expressionInterface).getHumanReadableOperator());
     }
 
     @Override

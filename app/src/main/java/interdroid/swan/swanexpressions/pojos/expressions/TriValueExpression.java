@@ -8,20 +8,20 @@ import java.util.List;
 /**
  * Created by steven on 01/04/15.
  */
-public class LogicValueExpression implements ExpressionInterface {
+public class TriValueExpression implements ExpressionListInterface {
 
     private List<ExpressionCreatorItem> mItems;
     private String mName;
 
-    public LogicValueExpression() {
+    public TriValueExpression() {
 
     }
 
-    public LogicValueExpression(List<ExpressionCreatorItem> items) {
+    public TriValueExpression(List<ExpressionCreatorItem> items) {
         this.mItems = items;
     }
 
-    protected LogicValueExpression(Parcel in) {
+    protected TriValueExpression(Parcel in) {
         mItems = new ArrayList<>();
         in.readList(mItems, ExpressionCreatorItem.class.getClassLoader());
     }
@@ -36,15 +36,15 @@ public class LogicValueExpression implements ExpressionInterface {
         return 0;
     }
 
-    public static final Creator<LogicValueExpression> CREATOR = new Creator<LogicValueExpression>() {
+    public static final Creator<TriValueExpression> CREATOR = new Creator<TriValueExpression>() {
         @Override
-        public LogicValueExpression createFromParcel(Parcel in) {
-            return new LogicValueExpression(in);
+        public TriValueExpression createFromParcel(Parcel in) {
+            return new TriValueExpression(in);
         }
 
         @Override
-        public LogicValueExpression[] newArray(int size) {
-            return new LogicValueExpression[size];
+        public TriValueExpression[] newArray(int size) {
+            return new TriValueExpression[size];
         }
     };
 
