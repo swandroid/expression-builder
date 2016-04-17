@@ -8,9 +8,21 @@
         android:orderInCategory="100"
         app:showAsAction="never" />-->
     <item
+        android:id="@+id/action_remove_last_item"
+        android:title="@string/action_remove_last_item"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_undo_white_24dp"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_restore_last_item"
+        android:title="@string/action_restore_last_item"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_redo_white_24dp"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_save"
         android:title="@string/action_save"
-        android:orderInCategory="200"
-        android:icon="@android:drawable/ic_menu_save"
+        android:orderInCategory="300"
+        android:icon="@drawable/ic_save_white_24dp"
         app:showAsAction="always" />
 </menu>

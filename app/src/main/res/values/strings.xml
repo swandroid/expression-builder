@@ -5,6 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="action_expression_builder">Start Expression Builder</string>
     <string name="action_save">Save</string>
+    <string name="action_remove_last_item">Remove last item</string>
+    <string name="action_restore_last_item">Restore last item</string>
 
     <string name="expression_sensor">Sensor Expression</string>
     <string name="expression_sensor_sum">Local or remote sensor</string>
@@ -25,6 +27,10 @@
     <string name="activity_title_builder">Build</string>
 
     <string name="label_name">NAME</string>
+    <string name="error_name_empty">Name cannot be empty</string>
+    <string name="error_expression_not_valid">The expression is not valid</string>
+    <string name="error_remove_not_possible">Remove not possible</string>
+    <string name="error_restore_not_possible">Restore not possible</string>
 
     <string name="label_sensor">SENSOR</string>
     <string name="label_value_path">VALUE PATH</string>

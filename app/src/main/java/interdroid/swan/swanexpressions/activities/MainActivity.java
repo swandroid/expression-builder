@@ -1,7 +1,5 @@
 package interdroid.swan.swanexpressions.activities;
 
-import com.melnykov.fab.FloatingActionButton;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,12 +10,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.melnykov.fab.FloatingActionButton;
+
 import interdroid.swan.ExpressionListener;
 import interdroid.swan.ExpressionManager;
 import interdroid.swan.SwanException;
+import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.adapters.ExpressionListAdapter;
 import interdroid.swan.swanexpressions.pojos.ExpressionItem;
+import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 import interdroid.swan.swansong.ExpressionFactory;
 import interdroid.swan.swansong.ExpressionParseException;
 import interdroid.swan.swansong.TimestampedValue;
@@ -107,15 +109,31 @@ public class MainActivity extends BaseActivity {
             }
         } else */if (requestCode == EXPRESSION_BUILDER_REQUEST || requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
             if (resultCode == RESULT_OK) {
-                String name = data.getStringExtra(BuilderActivity.KEY_EXTRA_NAME);
-                String expression = data.getStringExtra(BuilderActivity.KEY_EXTRA_EXPRESSION);
-                Toast.makeText(getApplicationContext(), name + ": " + expression, Toast.LENGTH_LONG).show();
-                Log.d(TAG, name + ": " + expression);
-
-                ExpressionItem expressionItem = new ExpressionItem(name, expression);
-                mAdapter.addExpression(expressionItem);
-                registerExpression(expressionItem);
+                ExpressionCreatorItem expressionCreatorItem = data.getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
+                handleExpressionCreatorItom(expressionCreatorItem);
+//                String name = data.getStringExtra(BuilderActivity.KEY_EXTRA_NAME);
+//                String expression = data.getStringExtra(BuilderActivity.KEY_EXTRA_EXPRESSION);
+//                Toast.makeText(getApplicationContext(), name + ": " + expression, Toast.LENGTH_LONG).show();
+//                Log.d(TAG, name + ": " + expression);
+//
+//                ExpressionItem expressionItem = new ExpressionItem(name, expression);
+//                mAdapter.addExpression(expressionItem);
+//                registerExpression(expressionItem);
             }
+        }
+    }
+
+    private void handleExpressionCreatorItom(ExpressionCreatorItem expressionCreatorItem) {
+        switch (expressionCreatorItem.expressionTypeInt) {
+            case Constants.VALUE_EXPRESSION:
+                Toast.makeText(getApplicationContext(), "Value expression", Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.COMPARISON_VALUE_EXPRESSION:
+                Toast.makeText(getApplicationContext(), "Comparison expression", Toast.LENGTH_SHORT).show();
+                break;
+            case Constants.TRI_VALUE_EXPRESSION:
+                Toast.makeText(getApplicationContext(), "Tri value expression", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 

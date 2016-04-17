@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
@@ -100,12 +101,26 @@ public class BuilderActivityNew extends BaseActivity {
             case R.id.action_save:
                 buildExpression();
                 return true;
+            case R.id.action_remove_last_item:
+                removeLastItem();
+                return true;
+            case R.id.action_restore_last_item:
+                restoreLastItem();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void buildExpression() {
+        if (mName.getText().length() < 1) {
+            mName.setError(getString(R.string.error_name_empty));
+            return;
+        }
         ExpressionCreatorItem expressionCreatorItem = mAdapter.getExpressionCreatorItem();
+        if (expressionCreatorItem == null) {
+            Toast.makeText(getApplicationContext(), getString(R.string.error_expression_not_valid), Toast.LENGTH_LONG).show();
+            return;
+        }
         expressionCreatorItem.expressionInterface.setName(mName.getText().toString());
 //        String name = mName.getText().toString();
 //        String expression = mAdapter.buildExpression();
@@ -116,6 +131,18 @@ public class BuilderActivityNew extends BaseActivity {
         setResult(RESULT_OK, intent);
         finish();
         //Toast.makeText(getApplicationContext(), "Expression: " + expression, Toast.LENGTH_LONG).show();
+    }
+
+    private void removeLastItem() {
+        if (!mAdapter.removeLastItem()) {
+            Toast.makeText(getApplicationContext(), R.string.error_remove_not_possible, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void restoreLastItem() {
+        if (!mAdapter.restoreLastItem()) {
+            Toast.makeText(getApplicationContext(), R.string.error_restore_not_possible, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

@@ -39,10 +39,13 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
 
     private Context mContext;
     private ArrayList<ExpressionCreatorItem> mExpressionCreators;
+    private ArrayList<ExpressionCreatorItem> mRemovedCreators;
 
     public ExpressionCreatorListAdapterNew(Context context) {
         mContext = context;
-        mExpressionCreators = new ArrayList<ExpressionCreatorItem>();
+        mExpressionCreators = new ArrayList<>();
+        mRemovedCreators = new ArrayList<>();
+
         //mOnExpressionCreatorClickListener = onClickListener;
 //        addExpressionCreator();
     }
@@ -144,6 +147,7 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
     }
 
     public void addExpression(ExpressionCreatorItem expressionCreatorItem) {
+        mRemovedCreators.clear();
         expandExpressions();
 
         mExpressionCreators.add(expressionCreatorItem);
@@ -485,7 +489,31 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
     }
 
     public ExpressionCreatorItem getExpressionCreatorItem() {
-        //TODO: return as container;
-        return mExpressionCreators.get(0);
+        if (mExpressionCreators.size() == 1) {
+            return mExpressionCreators.get(0);
+        }
+        return null;
+    }
+
+    public boolean removeLastItem() {
+        if (mExpressionCreators.size() > 0) {
+            expandExpressions();
+            mRemovedCreators.add(0, mExpressionCreators.remove(mExpressionCreators.size() - 1));
+            checkIfExpressionsCanBeCollapsed();
+            notifyDataSetChanged();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean restoreLastItem() {
+        if (mRemovedCreators.size() > 0) {
+            expandExpressions();
+            mExpressionCreators.add(mRemovedCreators.remove(0));
+            checkIfExpressionsCanBeCollapsed();
+            notifyDataSetChanged();
+            return true;
+        }
+        return false;
     }
 }

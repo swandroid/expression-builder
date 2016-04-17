@@ -29,6 +29,10 @@ public class SensorExpressionView extends CardView {
     @Override
     public void onFinishInflate() {
         super.onFinishInflate();
+        getViews();
+    }
+
+    private void getViews() {
         mSensorImage = (ImageView) findViewById(R.id.sensor_image);
     }
 }
