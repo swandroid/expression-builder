@@ -22,12 +22,14 @@ public class ValueExpression implements ExpressionListInterface {
     }
 
     protected ValueExpression(Parcel in) {
+        mName = in.readString();
         mItems = new ArrayList<>();
         in.readList(mItems, ExpressionCreatorItem.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mName);
         dest.writeList(mItems);
     }
 
@@ -50,7 +52,11 @@ public class ValueExpression implements ExpressionListInterface {
 
     @Override
     public String getExpression() {
-        return "Hier moet de expression komen";
+        String expression = "";
+        for (int i = 0; i < mItems.size(); i++) {
+            expression += " " + mItems.get(i).expressionInterface.getExpression();
+        }
+        return expression;
     }
 
     @Override

@@ -111,14 +111,15 @@ public class MainActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 ExpressionCreatorItem expressionCreatorItem = data.getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
                 handleExpressionCreatorItom(expressionCreatorItem);
+                ExpressionItem expressionItem = new ExpressionItem(expressionCreatorItem.name, expressionCreatorItem.expressionInterface.getExpression());
+                mAdapter.addExpression(expressionItem);
+                registerExpression(expressionItem);
 //                String name = data.getStringExtra(BuilderActivity.KEY_EXTRA_NAME);
 //                String expression = data.getStringExtra(BuilderActivity.KEY_EXTRA_EXPRESSION);
 //                Toast.makeText(getApplicationContext(), name + ": " + expression, Toast.LENGTH_LONG).show();
 //                Log.d(TAG, name + ": " + expression);
 //
-//                ExpressionItem expressionItem = new ExpressionItem(name, expression);
-//                mAdapter.addExpression(expressionItem);
-//                registerExpression(expressionItem);
+//
             }
         }
     }

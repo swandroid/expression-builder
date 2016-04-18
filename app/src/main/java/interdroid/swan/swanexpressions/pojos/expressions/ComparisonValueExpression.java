@@ -50,7 +50,11 @@ public class ComparisonValueExpression implements ExpressionListInterface {
 
     @Override
     public String getExpression() {
-        return "Hier moet de expression komen";
+        String expression = "";
+        for (int i = 0; i < mItems.size(); i++) {
+            expression += " " + mItems.get(i).expressionInterface.getExpression();
+        }
+        return expression;
     }
 
     @Override

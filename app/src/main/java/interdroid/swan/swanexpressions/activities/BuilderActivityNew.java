@@ -121,7 +121,7 @@ public class BuilderActivityNew extends BaseActivity {
             Toast.makeText(getApplicationContext(), getString(R.string.error_expression_not_valid), Toast.LENGTH_LONG).show();
             return;
         }
-        expressionCreatorItem.expressionInterface.setName(mName.getText().toString());
+        expressionCreatorItem.name = mName.getText().toString();
 //        String name = mName.getText().toString();
 //        String expression = mAdapter.buildExpression();
         Intent intent = new Intent();
