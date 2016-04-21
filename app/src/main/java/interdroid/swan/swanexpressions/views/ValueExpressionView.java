@@ -64,7 +64,7 @@ public class ValueExpressionView extends FrameLayout {
                 mExpressionContainer.addView(view);
             } else if (items.get(i).expressionTypeInt == Constants.SENSOR_EXPRESSION) {
                 SensorExpressionView view = (SensorExpressionView) inflater.inflate(R.layout.view_sensor_expression, null);
-//                view.setExpressionCreatorItem(mExpressionCreatorItems.get(i), null);
+                view.setExpressionCreatorItem(items.get(i), null);
                 mExpressionContainer.addView(view);
             } else if (items.get(i).expressionTypeInt == Constants.MATH_EXPRESSION) {
                 MathOperatorExpressionView view =

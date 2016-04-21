@@ -9,5 +9,64 @@
         android:id="@+id/toolbar"
         layout="@layout/toolbar" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/padding_medium">
+
+        <Spinner
+            android:id="@+id/sensor_expression_sensor_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_value_path"
+            android:textColor="@color/text_secondary_color"
+            android:textSize="@dimen/abc_text_size_small_material"/>
+
+        <Spinner
+            android:id="@+id/sensor_expression_value_path_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_history"
+            android:textColor="@color/text_secondary_color"
+            android:textSize="@dimen/abc_text_size_small_material"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/sensor_expression_history_window_edittext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:digits="0123456789"
+                android:text="0"/>
+
+            <Spinner
+                android:id="@+id/sensor_expression_history_unit_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.35"/>
+
+            <Spinner
+                android:id="@+id/sensor_expression_history_reduction_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.35"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
     <!-- TODO: look at page from college blok -->
 </LinearLayout>

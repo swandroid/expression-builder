@@ -25,6 +25,7 @@ import interdroid.swan.swanexpressions.views.ConstantExpressionView;
 import interdroid.swan.swanexpressions.views.LogicOperatorExpressionView;
 import interdroid.swan.swanexpressions.views.ComparisonValueExpressionView;
 import interdroid.swan.swanexpressions.views.MathOperatorExpressionView;
+import interdroid.swan.swanexpressions.views.SensorExpressionView;
 import interdroid.swan.swanexpressions.views.TriValueExpressionView;
 import interdroid.swan.swanexpressions.views.ValueExpressionView;
 
@@ -32,7 +33,8 @@ import interdroid.swan.swanexpressions.views.ValueExpressionView;
  * Created by steven on 01/03/15.
  */
 public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<ExpressionCreatorListAdapterNew.SimpleViewHolder>
-    implements ConstantExpressionView.OnConstantExpressionClickListener,
+    implements SensorExpressionView.OnSensorExpressionClickListener,
+        ConstantExpressionView.OnConstantExpressionClickListener,
         MathOperatorExpressionView.OnMathOperatorExpressionClickListener,
         ComparisonOperatorExpressionView.OnComparisonOperatorExpressionClickListener,
         LogicOperatorExpressionView.OnLogicOperatorExpressionClickListener {
@@ -113,7 +115,7 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
     @Override
     public void onBindViewHolder(SimpleViewHolder holder, int position) {
         if (holder.getItemViewType() == Constants.SENSOR_EXPRESSION) {
-
+            ((SensorExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position), this);
         } else if (holder.getItemViewType() == Constants.CONSTANT_EXPRESSION) {
             ((ConstantExpressionView) holder.itemView).setExpressionCreatorItem(mExpressionCreators.get(position), this);
         } else if (holder.getItemViewType() == Constants.MATH_EXPRESSION) {
@@ -459,6 +461,11 @@ public class ExpressionCreatorListAdapterNew extends RecyclerView.Adapter<Expres
             }
         }
         return Constants.VALUE_OPERATOR_EXPRESSION;
+    }
+
+    @Override
+    public void onSensorExpressionClicked(ExpressionCreatorItem expressionCreatorItem) {
+        startExpresionSelectionActivity(expressionCreatorItem);
     }
 
     @Override
