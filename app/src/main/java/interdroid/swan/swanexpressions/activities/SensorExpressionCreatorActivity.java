@@ -3,15 +3,16 @@ package interdroid.swan.swanexpressions.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
     private EditText mHistoryWindowInput;
     private Spinner mHitoryWindowUnitSpinner;
     private Spinner mHistoryWindowReductionSpinner;
+    private View mSplitView;
+    private LinearLayout mSpecificContainer;
 
     private ExpressionCreatorItem mExpressionCreatorItem;
 
@@ -48,7 +51,6 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
         setActionBarIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
 
         mExpressionCreatorItem = getIntent().getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
-        Log.d("SensorExpressionCreatorActivity", "mExpressionCreatorItem: " + mExpressionCreatorItem);
 
         getViews();
         getData();
@@ -65,6 +67,8 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
         mHistoryWindowInput = (EditText) findViewById(R.id.sensor_expression_history_window_edittext);
         mHitoryWindowUnitSpinner = (Spinner) findViewById(R.id.sensor_expression_history_unit_spinner);
         mHistoryWindowReductionSpinner = (Spinner) findViewById(R.id.sensor_expression_history_reduction_spinner);
+        mSplitView = findViewById(R.id.sensor_expression_split_view);
+        mSpecificContainer = (LinearLayout) findViewById(R.id.sensor_expression_specific_container);
     }
 
     private void getData() {
@@ -195,8 +199,9 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
 
                 Set<String> keys = new HashSet<String>();
                 keys.addAll(sensorInfo.getConfiguration().keySet());
+                mSpecificContainer.removeAllViews();
                 if (keys.size() > 0) {
-                    //TODO: add a button to show there are extra options to set
+                    addViewsForKeys(keys, sensorInfo.getConfiguration());
                 }
             }
         }
@@ -206,6 +211,23 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
 
         }
     };
+
+    private void addViewsForKeys(Set<String> keys, Bundle bundle) {
+        for (String key: keys) {
+            if (key.contains("configuration_full")) {
+                //TODO: add a button for further configuration
+            } else {
+                TextInputLayout textInputLayout = (TextInputLayout) getLayoutInflater()
+                        .inflate(R.layout.sensor_specific_item, mSpecificContainer, false);
+                EditText editText = (EditText) textInputLayout.findViewById(R.id.sensor_specific_edittext);
+                editText.setText(bundle.get(key).toString());
+                //TODO: possible set correct editText value
+                textInputLayout.setHint(key);
+                mSpecificContainer.addView(textInputLayout);
+            }
+        }
+    }
+
 
     private AdapterView.OnItemSelectedListener mOnValuePathSelectedListener = new AdapterView.OnItemSelectedListener() {
         @Override
