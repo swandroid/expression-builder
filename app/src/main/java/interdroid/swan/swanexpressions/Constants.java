@@ -22,4 +22,6 @@ public class Constants {
 //    public static final String EXTRA_EXPRESSION_IS_UPDATE = "extra_expression_is_update";
     public static final String EXTRA_EXPRESSION_LIST_POSITION = "extra_expression_list_position";
 
+    public static final String EXTRA_REQUEST_FULL = "result_full";
+
 }

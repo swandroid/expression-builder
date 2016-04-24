@@ -11,12 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import interdroid.swan.SensorInfo;
@@ -24,6 +26,7 @@ import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.SwanExpressionsApp;
 import interdroid.swan.swanexpressions.adapters.SensorSelectSpinnerAdapter;
+import interdroid.swan.swanexpressions.pojos.ConfigurationItem;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
 import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
 
@@ -32,6 +35,7 @@ import interdroid.swan.swanexpressions.pojos.expressions.SensorExpression;
  */
 public class SensorExpressionCreatorActivity extends BaseActivity {
 
+    private static final int REQUEST_ID_CONFIGURATION = 2001;
 
     private Spinner mSensorSpinner;
     private Spinner mValuePathSpinner;
@@ -44,6 +48,10 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
     private ExpressionCreatorItem mExpressionCreatorItem;
 
     private ArrayList<SensorInfo> mSensors;
+
+    private String mButtonKey;
+    private String mButtonValue;
+    private boolean mReceivedValueFromButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,6 +193,7 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             if (mSensors != null) {
+                mReceivedValueFromButton = false;
                 SensorInfo sensorInfo = mSensors.get(position);
                 if (mExpressionCreatorItem.expressionInterface != null
                         && !sensorInfo.getEntity().equals(((SensorExpression) mExpressionCreatorItem.expressionInterface).getSensor())) {
@@ -212,16 +221,28 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
         }
     };
 
-    private void addViewsForKeys(Set<String> keys, Bundle bundle) {
-        for (String key: keys) {
+    private void addViewsForKeys(final Set<String> keys, final Bundle bundle) {
+        for (final String key: keys) {
             if (key.contains("configuration_full")) {
-                //TODO: add a button for further configuration
+                Button button = new Button(mSpecificContainer.getContext());
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent().setClassName("interdroid.swan",
+                                bundle.get(key).toString());
+                        startActivityForResult(intent, REQUEST_ID_CONFIGURATION);
+                    }
+                });
+                button.setText("Configuration");
+                mSpecificContainer.addView(button);
+                mButtonKey = key;
             } else {
                 TextInputLayout textInputLayout = (TextInputLayout) getLayoutInflater()
                         .inflate(R.layout.sensor_specific_item, mSpecificContainer, false);
                 EditText editText = (EditText) textInputLayout.findViewById(R.id.sensor_specific_edittext);
                 editText.setText(bundle.get(key).toString());
-                //TODO: possible set correct editText value
+                //TODO: possible set correct editText value (value from previous configuration)
+                //TODO: set spinners instead of EditText if the key is known
                 textInputLayout.setHint(key);
                 mSpecificContainer.addView(textInputLayout);
             }
@@ -316,12 +337,48 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, mExpressionCreatorItem);
-                setResult(Activity.RESULT_OK, resultIntent);
-                finish();
+                saveExpression();
+
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void saveExpression() {
+        SensorExpression sensorExpression = ((SensorExpression) mExpressionCreatorItem.expressionInterface);
+        List<ConfigurationItem> list = sensorExpression.getConfigurationList();
+        list.clear();
+        for (int i = 0; i < mSpecificContainer.getChildCount(); i++) {
+            if (mSpecificContainer.getChildAt(i) instanceof TextInputLayout) {
+                TextInputLayout textInputLayout = (TextInputLayout) mSpecificContainer.getChildAt(i);
+                EditText editText = (EditText) textInputLayout.getChildAt(0);
+                list.add(new ConfigurationItem(textInputLayout.getHint().toString(), editText.getText().toString()));
+            } else if (mSpecificContainer.getChildAt(i) instanceof Button) {
+                if (mReceivedValueFromButton) {
+                    list.add(new ConfigurationItem(mButtonKey, mButtonValue));
+                } else {
+                    //TODO: show error
+                }
+            }
+        }
+        sensorExpression.setConfigurationList(list);
+
+        //Finish activity
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, mExpressionCreatorItem);
+        setResult(Activity.RESULT_OK, resultIntent);
+        finish();
+    }
+
+    @Override
+    protected void onActivityResult(int reqCode, int resCode, Intent data) {
+        if (reqCode == REQUEST_ID_CONFIGURATION) {
+            if (resCode == RESULT_OK) {
+                if (data.hasExtra(Constants.EXTRA_REQUEST_FULL)) {
+                    mButtonValue = data.getStringExtra(Constants.EXTRA_REQUEST_FULL);
+                    mReceivedValueFromButton = true;
+                }
+            }
+        }
     }
 }

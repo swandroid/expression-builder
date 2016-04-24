@@ -2,6 +2,11 @@ package interdroid.swan.swanexpressions.pojos.expressions;
 
 import android.os.Parcel;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import interdroid.swan.swanexpressions.pojos.ConfigurationItem;
+
 /**
  * Created by steven on 01/04/15.
  */
@@ -12,6 +17,7 @@ public class SensorExpression implements ExpressionInterface {
     private int historyWindow;
     private String historyUnit;
     private String historyReductionMode;
+    private List<ConfigurationItem> configurationList;
 
     public SensorExpression() {
         this.sensor = "";
@@ -19,6 +25,7 @@ public class SensorExpression implements ExpressionInterface {
         this.historyWindow = 0;
         this.historyUnit = "";
         this.historyReductionMode = "";
+        this.configurationList = new ArrayList<>();
     }
 
     protected SensorExpression(Parcel in) {
@@ -27,6 +34,8 @@ public class SensorExpression implements ExpressionInterface {
         historyWindow = in.readInt();
         historyUnit = in.readString();
         historyReductionMode = in.readString();
+        configurationList = new ArrayList<>();
+        in.readList(configurationList, ConfigurationItem.class.getClassLoader());
     }
 
     @Override
@@ -36,6 +45,7 @@ public class SensorExpression implements ExpressionInterface {
         dest.writeInt(historyWindow);
         dest.writeString(historyUnit);
         dest.writeString(historyReductionMode);
+        dest.writeList(configurationList);
     }
 
     @Override
@@ -59,6 +69,18 @@ public class SensorExpression implements ExpressionInterface {
     public String getExpression() {
         if (sensor.equals("time")) {
             return String.format("self@%s:%s", sensor, valuePath);
+        } else if (configurationList.size() > 0) {
+            StringBuffer sb = new StringBuffer("?");
+            for (int i = 0; i < configurationList.size(); i++) {
+                if (i != 0) {
+                    sb.append("&");
+                }
+                sb.append(configurationList.get(i).key);
+                sb.append("='");
+                sb.append(configurationList.get(i).value);
+                sb.append("'");
+            }
+            return String.format("self@%s:%s%s{%s,%d%s}", sensor, valuePath, sb.toString(), historyReductionMode, historyWindow, historyUnit);
         }
         return String.format("self@%s:%s{%s,%d%s}", sensor, valuePath, historyReductionMode, historyWindow, historyUnit);
     }
@@ -107,6 +129,10 @@ public class SensorExpression implements ExpressionInterface {
         this.historyReductionMode = historyReductionMode;
     }
 
+    public void setConfigurationList(List<ConfigurationItem> configurationList) {
+        this.configurationList = configurationList;
+    }
+
     public String getSensor() {
         return sensor;
     }
@@ -125,5 +151,9 @@ public class SensorExpression implements ExpressionInterface {
 
     public String getHistoryReductionMode() {
         return historyReductionMode;
+    }
+
+    public List<ConfigurationItem> getConfigurationList() {
+        return configurationList;
     }
 }
