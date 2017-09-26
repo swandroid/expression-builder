@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity {
         } else */if (requestCode == EXPRESSION_BUILDER_REQUEST || requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
             if (resultCode == RESULT_OK) {
                 ExpressionCreatorItem expressionCreatorItem = data.getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
-                handleExpressionCreatorItom(expressionCreatorItem);
+                handleExpressionCreatorItem(expressionCreatorItem);
                 ExpressionItem expressionItem = new ExpressionItem(expressionCreatorItem.name, expressionCreatorItem.expressionInterface.getExpression());
                 mAdapter.addExpression(expressionItem);
                 registerExpression(expressionItem);
@@ -124,7 +124,7 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void handleExpressionCreatorItom(ExpressionCreatorItem expressionCreatorItem) {
+    private void handleExpressionCreatorItem(ExpressionCreatorItem expressionCreatorItem) {
         switch (expressionCreatorItem.expressionTypeInt) {
             case Constants.VALUE_EXPRESSION:
                 Toast.makeText(getApplicationContext(), "Value expression", Toast.LENGTH_SHORT).show();

@@ -66,10 +66,10 @@ public class ValueSelectionView extends LinearLayout {
 
         @Override
         public void onClick(View v) {
-            if (mExpressionCreatorItem.expressionInterface == null) {
+//            if (mExpressionCreatorItem.expressionInterface == null) {
                 mExpressionCreatorItem.expressionTypeInt = Constants.SENSOR_EXPRESSION;
                 mExpressionCreatorItem.expressionInterface = new SensorExpression();
-            }
+//            }
             Intent intent = new Intent(getContext(), SensorExpressionCreatorActivity.class);
             intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, mExpressionCreatorItem);
             ((Activity) getContext()).startActivityForResult(intent, ExpressionSelectionActivity.EXPRESSION_REQUEST_ID);
@@ -80,10 +80,10 @@ public class ValueSelectionView extends LinearLayout {
 
         @Override
         public void onClick(View v) {
-            if (mExpressionCreatorItem.expressionInterface == null) {
+//            if (mExpressionCreatorItem.expressionInterface == null) {
                 mExpressionCreatorItem.expressionTypeInt = Constants.CONSTANT_EXPRESSION;
                 mExpressionCreatorItem.expressionInterface = new ConstantExpression();
-            }
+//            }
             Intent intent = new Intent(getContext(), ConstantExpressionCreatorActivity.class);
             intent.putExtra(Constants.EXTRA_EXPRESSION_CREATOR, mExpressionCreatorItem);
             ((Activity) getContext()).startActivityForResult(intent, ExpressionSelectionActivity.EXPRESSION_REQUEST_ID);
