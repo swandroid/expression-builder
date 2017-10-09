@@ -1,6 +1,7 @@
 package interdroid.swan.swanexpressions.adapters;
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import interdroid.swan.ExpressionManager;
+import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
 import interdroid.swan.swanexpressions.pojos.ExpressionItem;
 
@@ -37,6 +39,7 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
         public TextView mExpressionName;
         public TextView mExpressionValuation;
         public int mPosition;
+
         public ViewHolder(View view) {
             super(view);
             mRoot = view;
@@ -63,9 +66,23 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         ExpressionItem expression = mExpressions.get(i);
+        setBackgroundColor(viewHolder, expression);
         viewHolder.mExpressionName.setText(expression.name);
         viewHolder.mExpressionValuation.setText(expression.valuation);
         viewHolder.mPosition = i;
+    }
+
+    private void setBackgroundColor(ViewHolder viewHolder, ExpressionItem expressionItem) {
+        if (expressionItem.expressionType == Constants.VALUE_EXPRESSION) {
+            viewHolder.mContainer.setBackground(
+                    ContextCompat.getDrawable(viewHolder.mContainer.getContext(), R.drawable.item_selector_green));
+        } else if (expressionItem.expressionType == Constants.COMPARISON_VALUE_EXPRESSION) {
+            viewHolder.mContainer.setBackground(
+                    ContextCompat.getDrawable(viewHolder.mContainer.getContext(), R.drawable.item_selector_purple));
+        } else if (expressionItem.expressionType == Constants.TRI_VALUE_EXPRESSION) {
+            viewHolder.mContainer.setBackground(
+                    ContextCompat.getDrawable(viewHolder.mContainer.getContext(), R.drawable.item_selector_cyan));
+        }
     }
 
     @Override
@@ -90,7 +107,7 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
         @Override
         public void onClick(View v) {
             if (mOnExpressionClickListener != null) {
-                mOnExpressionClickListener.onExpressionClicked(mExpressions.get(((ViewHolder)((View)v.getParent()).getTag()).mPosition));
+                mOnExpressionClickListener.onExpressionClicked(mExpressions.get(((ViewHolder) ((View) v.getParent()).getTag()).mPosition));
             }
         }
     };

@@ -17,6 +17,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="interdroid.swan.ui.BUILD_EXPRESSION" >
+                </action>
+
+                <category android:name="android.intent.category.DEFAULT" >
+                </category>
+            </intent-filter>
         </activity>
         <activity android:name=".activities.BuilderActivity"
             android:label="@string/activity_title_builder"

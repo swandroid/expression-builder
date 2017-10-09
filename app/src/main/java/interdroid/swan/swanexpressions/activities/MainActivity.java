@@ -42,6 +42,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setResult(RESULT_CANCELED);
         setActionBarIcon(R.drawable.ic_ab_drawer);
 
         getViews();
@@ -101,17 +102,18 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /*if (requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
+        if (requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
             if (resultCode == RESULT_OK) {
                 String expression = data.getStringExtra("Expression");
                 Toast.makeText(getApplicationContext(), expression, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "expression result: " + expression);
             }
-        } else */if (requestCode == EXPRESSION_BUILDER_REQUEST || requestCode == EXPRESSION_BUILDER_OLD_REQUEST) {
+        } else if (requestCode == EXPRESSION_BUILDER_REQUEST/* || requestCode == EXPRESSION_BUILDER_OLD_REQUEST*/) {
             if (resultCode == RESULT_OK) {
                 ExpressionCreatorItem expressionCreatorItem = data.getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
                 handleExpressionCreatorItem(expressionCreatorItem);
-                ExpressionItem expressionItem = new ExpressionItem(expressionCreatorItem.name, expressionCreatorItem.expressionInterface.getExpression());
+                ExpressionItem expressionItem = new ExpressionItem(expressionCreatorItem.name,
+                        expressionCreatorItem.expressionInterface.getExpression(), expressionCreatorItem.expressionTypeInt);
                 mAdapter.addExpression(expressionItem);
                 registerExpression(expressionItem);
 //                String name = data.getStringExtra(BuilderActivity.KEY_EXTRA_NAME);
@@ -179,7 +181,8 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public void onExpressionClicked(ExpressionItem expression) {
-
+            setResult(RESULT_OK, new Intent().putExtra("Expression", expression.expression));
+            finish();
         }
     };
 
