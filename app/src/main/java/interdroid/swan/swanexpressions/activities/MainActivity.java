@@ -12,11 +12,14 @@ import android.widget.Toast;
 
 import com.melnykov.fab.FloatingActionButton;
 
+import java.util.List;
+
 import interdroid.swan.ExpressionListener;
 import interdroid.swan.ExpressionManager;
 import interdroid.swan.SwanException;
 import interdroid.swan.swanexpressions.Constants;
 import interdroid.swan.swanexpressions.R;
+import interdroid.swan.swanexpressions.SwanExpressionsSettings;
 import interdroid.swan.swanexpressions.adapters.ExpressionListAdapter;
 import interdroid.swan.swanexpressions.pojos.ExpressionItem;
 import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
@@ -46,10 +49,18 @@ public class MainActivity extends BaseActivity {
         setActionBarIcon(R.drawable.ic_ab_drawer);
 
         getViews();
+        getExpressions();
         //To start the expression builder from swan
         //startExpressionBuilder();
 
         //Log.d(TAG, "size: " + ExpressionManager.getSensors(MainActivity.this).size());
+    }
+
+    private void getExpressions() {
+        List<ExpressionItem> expressions = SwanExpressionsSettings.getInstance(this).getExpressionItems();
+        if (expressions != null) {
+            mAdapter.setExpressions(expressions);
+        }
     }
 
     private void startExpressionBuilder() {
@@ -116,6 +127,7 @@ public class MainActivity extends BaseActivity {
                         expressionCreatorItem.expressionInterface.getExpression(), expressionCreatorItem.expressionTypeInt);
                 mAdapter.addExpression(expressionItem);
                 registerExpression(expressionItem);
+                SwanExpressionsSettings.getInstance(this).setExpressionItems(mAdapter.getExpressions());
 //                String name = data.getStringExtra(BuilderActivity.KEY_EXTRA_NAME);
 //                String expression = data.getStringExtra(BuilderActivity.KEY_EXTRA_EXPRESSION);
 //                Toast.makeText(getApplicationContext(), name + ": " + expression, Toast.LENGTH_LONG).show();

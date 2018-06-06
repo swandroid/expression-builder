@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import interdroid.swan.ExpressionManager;
 import interdroid.swan.swanexpressions.Constants;
@@ -21,11 +22,11 @@ import interdroid.swan.swanexpressions.pojos.ExpressionItem;
  */
 public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAdapter.ViewHolder> {
 
-    private ArrayList<ExpressionItem> mExpressions;
+    private List<ExpressionItem> mExpressions;
     private OnExpressionClickListener mOnExpressionClickListener;
 
     public ExpressionListAdapter(OnExpressionClickListener onClickListener) {
-        mExpressions = new ArrayList<ExpressionItem>();
+        mExpressions = new ArrayList<>();
         mOnExpressionClickListener = onClickListener;
     }
 
@@ -90,7 +91,7 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
         return mExpressions.size();
     }
 
-    public void setExpressions(ArrayList<ExpressionItem> expressions) {
+    public void setExpressions(List<ExpressionItem> expressions) {
         mExpressions = expressions;
         notifyDataSetChanged();
     }
@@ -125,5 +126,9 @@ public class ExpressionListAdapter extends RecyclerView.Adapter<ExpressionListAd
         for (int i = 0; i < mExpressions.size(); i++) {
             ExpressionManager.unregisterExpression(context, mExpressions.get(i).getStringId());
         }
+    }
+
+    public List<ExpressionItem> getExpressions() {
+        return mExpressions;
     }
 }

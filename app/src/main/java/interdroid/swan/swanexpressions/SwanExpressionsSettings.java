@@ -8,24 +8,24 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import interdroid.swan.swanexpressions.pojos.expressions.ExpressionCreatorItem;
+import interdroid.swan.swanexpressions.pojos.ExpressionItem;
 
 /**
  * Created by steven on 17/04/16.
  */
 public class SwanExpressionsSettings {
 
-    private static final String KEY_EXPRESSION_CREATOR_ITEMS = "key_expression_creator_items";
+    private static final String KEY_EXPRESSIONS = "key_expressions";
 
     private static SwanExpressionsSettings sInstance;
     private ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private SharedPreferences mSharedPreferences;
 
-    private ArrayList<ExpressionCreatorItem> mExpressionCreatorItems;
+    private List<ExpressionItem> mExpressions;
 
     private SwanExpressionsSettings(Context context) {
         mExecutor = Executors.newSingleThreadExecutor();
@@ -43,9 +43,9 @@ public class SwanExpressionsSettings {
     }
 
     private void loadData() {
-        String expressionCreatorItemsString = mSharedPreferences.getString(KEY_EXPRESSION_CREATOR_ITEMS, null);
-        Type typeOfObjectsList = new TypeToken<ArrayList<ExpressionCreatorItem>>() {}.getType();
-        mExpressionCreatorItems = new Gson().fromJson(expressionCreatorItemsString, typeOfObjectsList);
+        String expressionItemsString = mSharedPreferences.getString(KEY_EXPRESSIONS, null);
+        Type typeOfObjectsList = new TypeToken<List<ExpressionItem>>() {}.getType();
+        mExpressions = new Gson().fromJson(expressionItemsString, typeOfObjectsList);
 
     }
 
@@ -60,13 +60,13 @@ public class SwanExpressionsSettings {
         });
     }
 
-    public void setExpressionCreatorItems(ArrayList<ExpressionCreatorItem> expressionCreatorItems) {
-        mExpressionCreatorItems = expressionCreatorItems;
-        persistString(KEY_EXPRESSION_CREATOR_ITEMS, new Gson().toJson(mExpressionCreatorItems));
+    public void setExpressionItems(List<ExpressionItem> expressionItems) {
+        mExpressions = expressionItems;
+        persistString(KEY_EXPRESSIONS, new Gson().toJson(mExpressions));
     }
 
-    public ArrayList<ExpressionCreatorItem> getExpressionCreatorItems() {
-        return mExpressionCreatorItems;
+    public List<ExpressionItem> getExpressionItems() {
+        return mExpressions;
     }
 
 }

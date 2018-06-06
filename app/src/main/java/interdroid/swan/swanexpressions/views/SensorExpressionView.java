@@ -68,14 +68,24 @@ public class SensorExpressionView extends FrameLayout implements View.OnClickLis
                 textView.setText(configurationItem.key + ": " + configurationItem.value);
                 mConfigurationContainer.addView(textView);
             } else {
+                //TODO: improve for RSS
                 String[] configurationFullParts = configurationItem.value.split("name");
                 String configurationName = configurationFullParts[1].replace("\":\"", "");
                 configurationName = configurationName.substring(0, configurationName.indexOf('"'));
-                String valueName = configurationFullParts[configurationFullParts.length - 1].replace("\":\"", "");
-                valueName = valueName.substring(0, valueName.indexOf('"'));
-                TextView textView = new TextView(mConfigurationContainer.getContext());
-                textView.setText(configurationName + ", " + valueName);
-                mConfigurationContainer.addView(textView);
+                if (configurationItem.key.equals("rss_configuration_full")) {
+                    String[] configurationFullPartsRss = configurationItem.value.split("word");
+                    String valueName = configurationFullPartsRss[1].replace("\":\"", "").replace("\"}", "");
+                    TextView textView = new TextView(mConfigurationContainer.getContext());
+                    textView.setText(configurationName + ", " + valueName);
+                    mConfigurationContainer.addView(textView);
+                } else {
+                    String valueName = configurationFullParts[configurationFullParts.length - 1].replace("\":\"", "");
+                    valueName = valueName.substring(0, valueName.indexOf('"'));
+                    TextView textView = new TextView(mConfigurationContainer.getContext());
+                    textView.setText(configurationName + ", " + valueName);
+                    mConfigurationContainer.addView(textView);
+                }
+
             }
 
         }
