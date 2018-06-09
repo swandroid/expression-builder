@@ -15,7 +15,6 @@ public enum ExpressionType {
     VALUE_EXPRESSION(5, R.string.expression_value, R.string.expression_value),
     TRI_STATE_EXPRESSION(6, R.string.expression_tri_state, R.string.expression_tri_state),
     VALUE_OPERATOR_EXPRESSION(7, R.string.expression_value_operator, R.string.expression_value_operator),
-//    TRI_STATE_OPERATOR_EXPRESSION(8, R.string.expression_tri_state_operator, R.string.expression_tri_state_operator),
     TRI_MATH_OPERATOR_EXPRESSION(9, R.string.expression_tri_math_operator, R.string.expression_tri_math_operator);
 
     private int id;

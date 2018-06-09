@@ -42,7 +42,6 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
     private EditText mHistoryWindowInput;
     private Spinner mHitoryWindowUnitSpinner;
     private Spinner mHistoryWindowReductionSpinner;
-    private View mSplitView;
     private LinearLayout mSpecificContainer;
 
     private ExpressionCreatorItem mExpressionCreatorItem;
@@ -75,7 +74,6 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
         mHistoryWindowInput = (EditText) findViewById(R.id.sensor_expression_history_window_edittext);
         mHitoryWindowUnitSpinner = (Spinner) findViewById(R.id.sensor_expression_history_unit_spinner);
         mHistoryWindowReductionSpinner = (Spinner) findViewById(R.id.sensor_expression_history_reduction_spinner);
-        mSplitView = findViewById(R.id.sensor_expression_split_view);
         mSpecificContainer = (LinearLayout) findViewById(R.id.sensor_expression_specific_container);
     }
 
@@ -89,8 +87,6 @@ public class SensorExpressionCreatorActivity extends BaseActivity {
         mSensorSpinner.setSelection(getSensorSelectionToSet());
 
         mValuePathSpinner.setOnItemSelectedListener(mOnValuePathSelectedListener);
-
-//        int historySelectionToSet = getHistoryUnitSelectionToSet();
 
         mHistoryWindowInput.addTextChangedListener(mOnHistoryWindowChangeListener);
         mHistoryWindowInput.setText(getHistoryWindowToSet());

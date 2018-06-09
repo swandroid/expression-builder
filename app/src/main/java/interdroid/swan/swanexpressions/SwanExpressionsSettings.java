@@ -1,6 +1,5 @@
 package interdroid.swan.swanexpressions;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -22,22 +21,21 @@ public class SwanExpressionsSettings {
     private static final String KEY_EXPRESSIONS = "key_expressions";
 
     private static SwanExpressionsSettings sInstance;
-    private ExecutorService mExecutor = Executors.newSingleThreadExecutor();
+    private ExecutorService mExecutor;
     private SharedPreferences mSharedPreferences;
 
     private List<ExpressionItem> mExpressions;
 
-    private SwanExpressionsSettings(Context context) {
+    private SwanExpressionsSettings() {
         mExecutor = Executors.newSingleThreadExecutor();
         mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(SwanExpressionsApp.getInstance());
-//        mSharedPreferences = context.getSharedPreferences("JsonSensor", Context.MODE_PRIVATE);
 
         loadData();
     }
 
-    public static SwanExpressionsSettings getInstance(Context context) {
+    public static SwanExpressionsSettings getInstance() {
         if (sInstance == null) {
-            sInstance = new SwanExpressionsSettings(context);
+            sInstance = new SwanExpressionsSettings();
         }
         return sInstance;
     }

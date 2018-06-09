@@ -29,9 +29,6 @@
         <activity android:name=".activities.BuilderActivity"
             android:label="@string/activity_title_builder"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activities.BuilderActivityNew"
-            android:label="@string/activity_title_builder"
-            android:screenOrientation="portrait"/>
         <activity android:name=".activities.ExpressionSelectionActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".activities.SensorExpressionCreatorActivity"

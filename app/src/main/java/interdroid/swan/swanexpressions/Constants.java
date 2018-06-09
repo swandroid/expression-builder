@@ -16,10 +16,7 @@ public class Constants {
     public static final int TRI_MATH_OPERATOR_EXPRESSION = 8;
     public static final int TRI_VALUE_EXPRESSION = 9;
 
-//    public static final int MATH_VALUE_EXPRESSION = 8;
-
     public static final String EXTRA_EXPRESSION_CREATOR = "extra_expression_creator";
-//    public static final String EXTRA_EXPRESSION_IS_UPDATE = "extra_expression_is_update";
     public static final String EXTRA_EXPRESSION_LIST_POSITION = "extra_expression_list_position";
 
     public static final String EXTRA_REQUEST_FULL = "result_full";

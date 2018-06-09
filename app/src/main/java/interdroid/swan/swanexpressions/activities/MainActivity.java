@@ -50,14 +50,10 @@ public class MainActivity extends BaseActivity {
 
         getViews();
         getExpressions();
-        //To start the expression builder from swan
-        //startExpressionBuilder();
-
-        //Log.d(TAG, "size: " + ExpressionManager.getSensors(MainActivity.this).size());
     }
 
     private void getExpressions() {
-        List<ExpressionItem> expressions = SwanExpressionsSettings.getInstance(this).getExpressionItems();
+        List<ExpressionItem> expressions = SwanExpressionsSettings.getInstance().getExpressionItems();
         if (expressions != null) {
             mAdapter.setExpressions(expressions);
         }
@@ -90,24 +86,6 @@ public class MainActivity extends BaseActivity {
 
         mAddButton = (FloatingActionButton) findViewById(R.id.fab);
         mAddButton.setOnClickListener(mOnAddClickListener);
-
-        //registerExpression(null);
-        /*mSensorSpinner = (Spinner) findViewById(R.id.main_sensor_spinner);
-        SensorSelectSpinnerAdapter adapter = new SensorSelectSpinnerAdapter(this,
-                R.layout.item_sensor_spinner, ExpressionManager.getSensors(MainActivity.this));
-        mSensorSpinner.setAdapter(adapter);*/
-        /*try {
-            ExpressionManager.registerValueExpression(this, "1234", (ValueExpression) ExpressionFactory.parse("self@movement:x{MAX, 1000}"), new ValueExpressionListener() {
-                @Override
-                public void onNewValues(String s, TimestampedValue[] timestampedValues) {
-                    Log.d(TAG, "String: " + s + "\nTimeStampedValues: " + timestampedValues.toString());
-                }
-            });
-        } catch (SwanException e) {
-            e.printStackTrace();
-        } catch (ExpressionParseException e) {
-            e.printStackTrace();
-        }*/
     }
 
 
@@ -119,7 +97,7 @@ public class MainActivity extends BaseActivity {
                 Toast.makeText(getApplicationContext(), expression, Toast.LENGTH_LONG).show();
                 Log.d(TAG, "expression result: " + expression);
             }
-        } else if (requestCode == EXPRESSION_BUILDER_REQUEST/* || requestCode == EXPRESSION_BUILDER_OLD_REQUEST*/) {
+        } else if (requestCode == EXPRESSION_BUILDER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 ExpressionCreatorItem expressionCreatorItem = data.getParcelableExtra(Constants.EXTRA_EXPRESSION_CREATOR);
                 handleExpressionCreatorItem(expressionCreatorItem);
@@ -127,13 +105,7 @@ public class MainActivity extends BaseActivity {
                         expressionCreatorItem.expressionInterface.getExpression(), expressionCreatorItem.expressionTypeInt);
                 mAdapter.addExpression(expressionItem);
                 registerExpression(expressionItem);
-                SwanExpressionsSettings.getInstance(this).setExpressionItems(mAdapter.getExpressions());
-//                String name = data.getStringExtra(BuilderActivity.KEY_EXTRA_NAME);
-//                String expression = data.getStringExtra(BuilderActivity.KEY_EXTRA_EXPRESSION);
-//                Toast.makeText(getApplicationContext(), name + ": " + expression, Toast.LENGTH_LONG).show();
-//                Log.d(TAG, name + ": " + expression);
-//
-//
+                SwanExpressionsSettings.getInstance().setExpressionItems(mAdapter.getExpressions());
             }
         }
     }
@@ -160,17 +132,6 @@ public class MainActivity extends BaseActivity {
         } catch (SwanException e) {
             e.printStackTrace();
         }
-
-        /*try {
-            Log.d(TAG, "register");
-            ExpressionManager.registerExpression(this, "test3", ExpressionFactory.parse("2 * self@movement:x{MAX, 1000} + self@movement:y{MIN,1000}"), mExpressionListener);
-        } catch (ExpressionParseException e) {
-            Log.e(TAG, "ExpressionParseException");
-            e.printStackTrace();
-        } catch (SwanException e) {
-            Log.e(TAG, "SwanException");
-            e.printStackTrace();
-        }*/
     }
 
     private ExpressionListener mExpressionListener = new ExpressionListener() {
@@ -201,7 +162,7 @@ public class MainActivity extends BaseActivity {
     private View.OnClickListener mOnAddClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(MainActivity.this, BuilderActivityNew.class);
+            Intent intent = new Intent(MainActivity.this, BuilderActivity.class);
             startActivityForResult(intent, EXPRESSION_BUILDER_REQUEST);
             overridePendingTransition(R.anim.right_slide_in, R.anim.fade_out);
         }

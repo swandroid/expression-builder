@@ -3,13 +3,11 @@ package interdroid.swan.swanexpressions.activities;
 /**
  * Created by steven on 24/10/14.
  */
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import interdroid.swan.swanexpressions.R;
 
@@ -37,7 +35,6 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //getMenuInflater().inflate(R.menu.global, menu);
         return true;
     }
 
@@ -56,10 +53,4 @@ public abstract class BaseActivity extends ActionBarActivity {
         super.onBackPressed();
         overridePendingTransition(R.anim.fade_in, R.anim.right_slide_out);
     }
-
-    /*@Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.fade_in, R.anim.right_slide_out);
-    }*/
 }
